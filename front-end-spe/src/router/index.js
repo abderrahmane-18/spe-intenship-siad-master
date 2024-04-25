@@ -12,7 +12,6 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true },
   },
   {
     path: '/admin',
@@ -27,7 +26,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
+  if (to.name === 'Dashboard') {
     const isAuthenticated = localStorage.getItem('access_token');
     if (!isAuthenticated) {
       next('/');
