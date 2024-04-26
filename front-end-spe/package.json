@@ -15,11 +15,15 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
+    "flatpickr": "^4.6.13",
+    "jsvectormap": "^1.5.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue3-apexcharts": "^1.5.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

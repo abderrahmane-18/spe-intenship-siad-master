@@ -1,4 +1,6 @@
 import './style.css'
+import 'jsvectormap/dist/css/jsvectormap.min.css'
+import 'flatpickr/dist/flatpickr.min.css'
 //import './axios'
 import { createPinia } from 'pinia'
 //import router from './router'
@@ -15,10 +17,13 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 library.add(far);
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
+import VueApexCharts from 'vue3-apexcharts'
 
 const pinia =createPinia();
 const app = createApp(App);
-
+app.use(createPinia())
 app.use(router)
 app.component("font-awesome-icon", FontAwesomeIcon);
+app.use(VueApexCharts)
+
 app.mount('#app')
