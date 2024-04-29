@@ -301,10 +301,12 @@ const menuGroups = ref([
   >
     <!-- SIDEBAR HEADER -->
     <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-      <router-link to="/">
-        <img src="@/assets/images/logo/logo.svg" alt="Logo" />
-      </router-link>
-
+      <div class="flex items-center">
+    <router-link to="/">
+      <img src="@/assets/images/logo/logo-spe.png" alt="Logo" class="h-8 w-auto" />
+    </router-link>
+    <span class="ml-3 text-lg font-semibold text-white">SPE-JIJEL</span>
+  </div>
       <button class="block lg:hidden" @click="sidebarStore.isSidebarOpen = false">
         <svg
           class="fill-current"
@@ -362,3 +364,9 @@ const menuGroups = ref([
     </div>
   </aside>
 </template>
+<style>
+.logo {
+  height: 2rem; /* Adjust as needed */
+  width: auto;
+}
+</style>

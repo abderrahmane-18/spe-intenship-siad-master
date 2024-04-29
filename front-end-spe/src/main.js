@@ -4,7 +4,7 @@ import 'flatpickr/dist/flatpickr.min.css'
 //import './axios'
 import { createPinia } from 'pinia'
 //import router from './router'
-import { createApp } from 'vue'
+import { createApp, ref  } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -25,5 +25,8 @@ app.use(createPinia())
 app.use(router)
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(VueApexCharts)
+const userName = ref(localStorage.getItem('name') || '');
+app.provide('userName', userName);
+
 
 app.mount('#app')

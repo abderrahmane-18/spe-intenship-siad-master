@@ -3,7 +3,6 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="api_token" content="{{ Auth::user()->api_token }}">
         <title>Laravel</title>
 
         <!-- Fonts -->

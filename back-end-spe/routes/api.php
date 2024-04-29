@@ -10,3 +10,12 @@ Route::get('/user', function (Request $request) {
 
 
 Route::post('login',[AuthController::class,'login']);
+//Route::put('update-profile', [AuthController::class, 'updateProfile']);
+Route::patch('{id}/update', [AuthController::class, 'update']);
+Route::get('user', [AuthController::class, 'index']);
+Route::get('user/{id}', [AuthController::class, 'showUser']);
+
+
+
+//->middleware('auth:sanctum')
+

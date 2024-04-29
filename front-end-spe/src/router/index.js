@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
+import SettingsView from '@/views/Pages/SettingsView.vue'
 
 const routes = [
   {
@@ -18,6 +19,14 @@ const routes = [
     name: 'Admin',
     component: () => import('../views/Admin.vue'),
   },
+  {
+    path: '/pages/settings',
+    name: 'settings',
+    component: SettingsView,
+    meta: {
+      title: 'Settings'
+    }
+  },
 ];
 
 const router = createRouter({
@@ -25,17 +34,6 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.name === 'Dashboard') {
-    const isAuthenticated = localStorage.getItem('access_token');
-    if (!isAuthenticated) {
-      next('/');
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-});
+
 
 export default router;

@@ -1,6 +1,10 @@
 <template>
+    <div class="login-view">
+
     <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img class="mx-auto h-10 w-auto" src="../assets/images/logo/logo-spe.png" alt="Your Company" />
+
         <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
       </div>
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -28,6 +32,7 @@
         </form>
       </div>
     </div>
+    </div>
   </template>
   
   <script setup>
@@ -43,14 +48,17 @@
     try {
       const response = await axios.post('http://localhost:8000/api/login', {
         email: email.value,
+   
         password: password.value,
       });
       console.log(response.data);
   
       // Store the access_token and email in local storage
       localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('name', response.data.name);
       localStorage.setItem('email', email.value);
-  
+      localStorage.setItem('id', response.data.id); // store the user ID
+
       // Redirect to the Dashboard component
       router.push({ name: 'Dashboard' });
     } catch (error) {
@@ -59,3 +67,16 @@
     }
   }
   </script>
+  <style>
+.login-view {
+  background-image: url('../assets/images/logo/spe-siad-1.png'); 
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

@@ -1,13 +1,45 @@
 <script setup >
 import { onClickOutside } from '@vueuse/core'
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted, inject, watchEffect } from 'vue';
 
+import eventBus from '@/eventBus'; // Import the event bus
+
+const userNameDisplay = ref(localStorage.getItem('name') || '');
+
+onMounted(() => {
+  // Listen for the userName-updated event
+  eventBus.$on('userName-updated', (newUserName) => {
+    userNameDisplay.value = newUserName;
+  });
+});
+
+onUnmounted(() => {
+  // Clean up the event listener when the component is unmounted
+  eventBus.$off('userName-updated');
+});
+//import { reactive, watchEffect } from 'vue';
+
+//const name = ref('');
+
+
+// Listen for changes in the user name
+
+/*
+watchEffect(() => {
+  name.value = localStorage.getItem('name');
+});
+*/
 const target = ref(null)
 const dropdownOpen = ref(false)
 
 onClickOutside(target, () => {
   dropdownOpen.value = false
 })
+/*
+onMounted(() => {
+  name.value = localStorage.getItem('name');
+});
+*/
 </script>
 
 <template>
@@ -18,14 +50,14 @@ onClickOutside(target, () => {
       @click.prevent="dropdownOpen = !dropdownOpen"
     >
       <span class="hidden text-right lg:block">
-        <span class="block text-sm font-medium text-black dark:text-white">Thomas Anree</span>
+        <span class="block text-sm font-medium text-black dark:text-white">{{ userNameDisplay}}</span>
         <span class="block text-xs font-medium">UX Designer</span>
       </span>
 
       <span class="h-12 w-12 rounded-full">
-        <img src="@/assets/images/user/user-01.png" alt="User" />
+        <img src="" alt="User" />
       </span>
-
+<!--@/assets/images/user/user-01.png-->
       <svg
         :class="dropdownOpen && 'rotate-180'"
         class="hidden fill-current sm:block"
