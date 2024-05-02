@@ -8,14 +8,15 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-class UserController extends Controller implements HasMiddleware 
+
+class UserController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
             new Middleware(middleware: ('permission:view user'), only: ['index']),
-            new Middleware(middleware: ('permission:create use role'), only: ['create','store']),
-            new Middleware(middleware: ('permission:update user'), only: ['update','edit']),
+            new Middleware(middleware: ('permission:create use role'), only: ['create', 'store']),
+            new Middleware(middleware: ('permission:update user'), only: ['update', 'edit']),
             new Middleware(middleware: ('permission:delete user'), only: ['destroy']),
 
         ];
@@ -38,7 +39,7 @@ class UserController extends Controller implements HasMiddleware
 
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
+        $roles = Role::pluck('name', 'name')->all();
         return view('role-permission.user.create', ['roles' => $roles]);
     }
 
@@ -52,20 +53,20 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
         $user = User::create([
-                        'name' => $request->name,
-                        'email' => $request->email,
-                        'password' => Hash::make($request->password),
-                    ]);
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
         $user->syncRoles($request->roles);
 
-        return redirect('/users')->with('status','User created successfully with roles');
+        return redirect('/users')->with('status', 'User created successfully with roles');
     }
 
     public function edit(User $user)
     {
-        $roles = Role::pluck('name','name')->all();
-        $userRoles = $user->roles->pluck('name','name')->all();
+        $roles = Role::pluck('name', 'name')->all();
+        $userRoles = $user->roles->pluck('name', 'name')->all();
         return view('role-permission.user.edit', [
             'user' => $user,
             'roles' => $roles,
@@ -86,7 +87,7 @@ class UserController extends Controller implements HasMiddleware
             'email' => $request->email,
         ];
 
-        if(!empty($request->password)){
+        if (!empty($request->password)) {
             $data += [
                 'password' => Hash::make($request->password),
             ];
@@ -95,7 +96,7 @@ class UserController extends Controller implements HasMiddleware
         $user->update($data);
         $user->syncRoles($request->roles);
 
-        return redirect('/users')->with('status','User Updated Successfully with roles');
+        return redirect('/users')->with('status', 'User Updated Successfully with roles');
     }
 
     public function destroy($userId)
@@ -103,6 +104,6 @@ class UserController extends Controller implements HasMiddleware
         $user = User::findOrFail($userId);
         $user->delete();
 
-        return redirect('/users')->with('status','User Delete Successfully');
+        return redirect('/users')->with('status', 'User Delete Successfully');
     }
 }
