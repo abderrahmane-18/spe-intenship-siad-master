@@ -17,7 +17,7 @@ const routes = [ { path: '/', name: 'Login', component: Login, },
 { path: '/profile/permission', name: 'permission', component: Permission, meta: { title: 'Permissions' }},
 { path: '/profile/roles', name: 'roles', component: Role, meta: { title: 'Role' } }, // Route for Roles component
 { path: '/profile/roles/create', name: 'rolesCreate', component: createRole, meta: { title: 'createRole' } }, // Route for Roles component
-{ path: '/profile/roles/add-permission', name: 'addPermissionRole', component: addPermissionRole, meta: { title: 'addPermissionRole' } }, // Route for Roles component
+{ path: '/profile/roles/add-permission/:roleId', name: 'addPermissionRole', component: addPermissionRole, meta: { title: 'addPermissionRole' } }, // Route for Roles component
 
   { path: '/profile/users', name: 'users', component: User, meta: { title: 'User' } },
  { path: '/profile/settings', name: 'settings', component: SettingsView, meta: { title: 'Settings' } }, ]; 

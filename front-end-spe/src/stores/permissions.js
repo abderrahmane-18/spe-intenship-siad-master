@@ -1,18 +1,13 @@
-import { createStore } from 'vuex'
+import { defineStore } from 'pinia'
 import axios from 'axios'
 
-const store = createStore({
-  state: {
+export const usePermissionsStore = defineStore('permissions', {
+  state: () => ({
     cachedPermissions: {},
-  },
-  mutations: {
-    SET_CACHED_PERMISSIONS(state, payload) {
-      state.cachedPermissions[payload.roleId] = payload.data
-    },
-  },
+  }),
   actions: {
-    async fetchPermissions({ commit }, roleId) {
-      const cachedData = this.state.cachedPermissions[roleId]
+    async fetchPermissions(roleId) {
+      const cachedData = this.cachedPermissions[roleId]
       if (cachedData) {
         return cachedData
       }
@@ -31,7 +26,7 @@ const store = createStore({
           rolePermissions: permissionsData.rolePermissions,
         }
 
-        commit('SET_CACHED_PERMISSIONS', { roleId, data })
+        this.cachedPermissions[roleId] = data
         return data
       } catch (error) {
         console.error(error)
@@ -39,5 +34,3 @@ const store = createStore({
     },
   },
 })
-
-export default store

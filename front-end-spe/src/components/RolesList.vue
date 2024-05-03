@@ -1,12 +1,12 @@
 
 
 <script setup>
-import PermissionList from '@/components/PermissionList.vue'
-import BreadcrumbDefault from '@/components/Breadcrumbs/BreadcrumbDefault.vue'
-import Dashboard from '@/views/Dashboard.vue'
-const pageTitle = ref('Roles ')
-
-import createRole from '@/components/Roles/createRole.vue'
+import PermissionList from '@/components/PermissionList.vue';
+import BreadcrumbDefault from '@/components/Breadcrumbs/BreadcrumbDefault.vue';
+import Dashboard from '@/views/Dashboard.vue';
+const pageTitle = ref('Roles ');
+import axios from 'axios';
+import createRole from '@/components/Roles/createRole.vue';
 import { ref, onMounted } from 'vue';
 const roles = ref([]);
 
@@ -21,6 +21,7 @@ const getRoles = async () => {
       roles.value = JSON.parse(cachedRoles);
       return;
     }
+    
 
     const response = await axios.get(`http://localhost:8000/api/roles`, {
       headers: {
@@ -84,11 +85,13 @@ onMounted(getRoles);
      <td class="border px-4 py-2">{{ role.id}}</td>
      <td class="border px-4 py-2">{{ role.name }}</td>
      <td class="border px-4 py-2 flex">
-       <router-link
-         to="/profile/roles/add-permission"
-         class="focus:outline-none text-white bg-cyan-500 hover:bg-cyan-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-         >Add / Edit Role Permission</router-link
-       >
+
+ 
+
+      <router-link
+  :to="{ name: 'addPermissionRole', params: { roleId: role.id }}"
+  class="focus:outline-none text-white bg-cyan-500 hover:bg-cyan-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+>Add / Edit Role Permission</router-link>
        <a
          href="#"
          class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"

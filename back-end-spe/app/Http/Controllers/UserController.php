@@ -34,7 +34,10 @@ class UserController extends Controller implements HasMiddleware
     public function index()
     {
         $users = User::get();
-        return view('role-permission.user.index', ['users' => $users]);
+        return response()->json([
+            'users' => $users
+        ]);
+        //  return view('role-permission.user.index', []);
     }
 
     public function create()
