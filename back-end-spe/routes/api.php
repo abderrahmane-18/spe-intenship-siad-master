@@ -33,7 +33,3 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
 });
-
-
-
-//->middleware('auth:sanctum')

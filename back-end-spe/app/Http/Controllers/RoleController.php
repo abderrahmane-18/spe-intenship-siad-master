@@ -107,8 +107,7 @@ class RoleController extends Controller implements HasMiddleware
             ->where('role_has_permissions.role_id', $role->id)
             ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
-
-        return view('role-permission.role.add-permissions', [
+        return response()->json([
             'role' => $role,
             'permissions' => $permissions,
             'rolePermissions' => $rolePermissions
