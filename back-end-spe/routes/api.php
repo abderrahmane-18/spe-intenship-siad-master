@@ -31,5 +31,6 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::put('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'givePermissionToRole']);
 
     Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::patch('users/{id}', [App\Http\Controllers\UserController::class]);
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
 });

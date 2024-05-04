@@ -31,6 +31,7 @@ class UserController extends Controller implements HasMiddleware
         $this->middleware('permission:delete user', ['only' => ['destroy']]);
     }
 */
+    /*
     public function index()
     {
         $users = User::get();
@@ -39,7 +40,24 @@ class UserController extends Controller implements HasMiddleware
         ]);
         //  return view('role-permission.user.index', []);
     }
+*/
+    public function index()
+    {
+        $users = User::with('roles')->get();
 
+        $usersWithRoleNames = $users->map(function ($user) {
+            $roleNames = $user->roles->pluck('name');
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'roles' => $roleNames,
+                // Include any other user properties you need
+            ];
+        });
+
+        return response()->json(['users' => $usersWithRoleNames]);
+    }
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
@@ -89,17 +107,19 @@ class UserController extends Controller implements HasMiddleware
             'name' => $request->name,
             'email' => $request->email,
         ];
-
+        /*
         if (!empty($request->password)) {
             $data += [
                 'password' => Hash::make($request->password),
             ];
         }
+        */
 
         $user->update($data);
         $user->syncRoles($request->roles);
-
-        return redirect('/users')->with('status', 'User Updated Successfully with roles');
+        $result = array('status' => true, 'message' => 'user hase been updated succefully', 'data' => $user);
+        return response()->json($result, 200);
+        //return redirect('/users')->with('status', 'User Updated Successfully with roles');
     }
 
     public function destroy($userId)
