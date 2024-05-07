@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,4 +34,6 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::patch('users/{id}', [App\Http\Controllers\UserController::class]);
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
+    Route::post('add-category', [CategoryController::class, "store"]);
+    Route::get('categories', [CategoryController::class, "index"]);
 });
