@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Controle extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'id_categorie',
+        'number_group',
+        'number_equip',
+    ];
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'id_categorie');
+    }
+
+    public function groupe()
+    {
+        return $this->belongsTo(Groupe::class, 'number_group');
+    }
 }

@@ -144,8 +144,8 @@ const menuGroups = ref([
                     </clipPath>
                   </defs>
                 </svg>`,
-        label: 'Tables',
-        route: '/tables'
+        label: 'Controles',
+        route: '/controle'
       },
       {
         icon: `<svg

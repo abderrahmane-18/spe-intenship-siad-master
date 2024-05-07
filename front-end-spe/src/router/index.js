@@ -5,6 +5,8 @@ import Dashboard from '../views/Dashboard.vue';
 import SettingsView from '@/views/Pages/SettingsView.vue'
 import createRole from '@/components/Roles/createRole.vue';
 import addPermissionRole from '@/components/Roles/addPermissionRole.vue';
+import ControleList from '@/views/ControleList.vue';
+import addCategory from '@/components/Categories/addCategory.vue';
 import editUser from '@/components/Users/editUser.vue';
 
 import Role from '@/views/Pages/Role.vue'; // import Roles 
@@ -14,7 +16,9 @@ const routes = [ { path: '/', name: 'Login', component: Login, },
 { path: '/dashboard', name: 'Dashboard', component: Dashboard, }, 
 
 { path: '/admin', name: 'Admin', component: () => import('../views/Admin.vue'), },
+{ path: '/categories/add-category', name: 'addCategory', component: addCategory, meta: { title: 'addCategory' }},
 
+{ path: '/controle', name: 'ControleList', component: ControleList, meta: { title: 'ControleList' }},
 
 { path: '/profile/permission', name: 'permission', component: Permission, meta: { title: 'Permissions' }},
 { path: '/profile/roles', name: 'roles', component: Role, meta: { title: 'Role' } }, // Route for Roles component

@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('controles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_categorie');
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->unique(['id_categorie', 'number_group', 'number_equip']);
             $table->timestamps();
 
-            $table->foreign('id_categorie')->references('id')->on('category_equipments');
+            $table->foreign('id_categorie')->references('id')->on('categories');
             $table->foreign('number_group')->references('id')->on('groupes');
         });
     }
