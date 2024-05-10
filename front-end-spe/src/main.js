@@ -7,6 +7,9 @@ import { createPinia } from 'pinia'
 import { createApp, ref  } from 'vue'
 import App from './App.vue'
 import router from './router'
+
+
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -20,9 +23,12 @@ dom.watch();
 import VueApexCharts from 'vue3-apexcharts'
 import store  from './stores/store'
 const pinia =createPinia();
+
 const app = createApp(App);
 app.use(createPinia())
 app.use(router)
+
+
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(VueApexCharts)
 const userName = ref(localStorage.getItem('name') || '');

@@ -6,6 +6,7 @@ import eventBus from '@/eventBus'; // Import the event bus
 
 const userNameDisplay = ref(localStorage.getItem('name') || '');
 
+
 onMounted(() => {
   // Listen for the userName-updated event
   eventBus.$on('userName-updated', (newUserName) => {
@@ -29,6 +30,10 @@ watchEffect(() => {
   name.value = localStorage.getItem('name');
 });
 */
+import { useLogout }  from '@/stores/useLogout'
+const { logout, isLoading } = useLogout()
+
+
 const target = ref(null)
 const dropdownOpen = ref(false)
 
@@ -154,9 +159,12 @@ onMounted(() => {
           </router-link>
         </li>
       </ul>
-      <button
+      <button  @click="logout"
+  :disabled="isLoading"
         class="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
       >
+      <span v-if="isLoading" class="flex items-center">
+
         <svg
           class="fill-current"
           width="22"
@@ -174,7 +182,11 @@ onMounted(() => {
             fill=""
           />
         </svg>
-        Log Out
+        Loading...
+      </span>
+      <span v-else>Log Out</span>
+
+     
       </button>
     </div>
     <!-- Dropdown End -->

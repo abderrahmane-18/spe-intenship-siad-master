@@ -116,11 +116,12 @@ const menuGroups = ref([
                     fill="white"
                   />
                 </svg>`,
-        label: 'Users',
+        label: 'Planifications',
         route: '#',
         children: [
-          { label: 'User Management', route: '/users/user-management' },
-          { label: 'User Permission', route: '/users/user-permission' }
+          { label: 'Groupe', route: '/planifications/groupe' },
+          { label: 'Controles', route: '/planifications/controle' },
+          { label: 'Program', route: '/planifications/Program' },
         ]
       },
       {

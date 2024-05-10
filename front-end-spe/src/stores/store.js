@@ -1,3 +1,4 @@
+/* store.js  vuex store*/
 import { createStore } from 'vuex'
 import axios from 'axios'
 
@@ -29,6 +30,17 @@ const store = createStore({
     ADD_CATEGORY(state, category) {
       state.categories.push(category)
     },
+    UPDATE_CATEGORY(state, updatedCategory) {
+      const index = state.categories.findIndex(category => category.id === updatedCategory.id)
+      if (index !== -1) {
+        state.categories.splice(index, 1, updatedCategory)
+      }
+    },
+    DELETE_CATEGORY(state, categoryId) {
+      state.categories = state.categories.filter(category => category.id !== categoryId)
+    },
+   
+    
   },
   actions: {
     async fetchPermissions({ commit }, roleId) {
@@ -90,34 +102,64 @@ const store = createStore({
         console.error(error)
       }
     },
-    async fetchCategories({ commit }) {
-      try {
-        const response = await axios.get('http://localhost:8000/api/categories', {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-          },
-        })
-        const categories = response.data.categories
-        commit('SET_CATEGORIES', categories)
-      } catch (error) {
-        console.error('Error fetching categories:', error)
-      }
-    },
 
-    async addCategory({ commit }, category) {
+
+    async addCategory({ commit }, categoryData) {
       try {
-        const response = await axios.post('http://localhost:8000/api/add-category', category, {
+        const response = await axios.post('http://localhost:8000/api/add-category', categoryData, {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token'),
           },
         })
-        commit('ADD_CATEGORY', response.data)
+        const newCategory = response.data.data
+        console.log('ddd' ,response.data)
+        commit('ADD_CATEGORY', newCategory)
       } catch (error) {
         console.error('Error adding category:', error)
-        throw error
+      }
+     },
+     async updateCategory({ commit }, categoryData) {
+      try {
+        const response = await axios.put(`http://localhost:8000/api/update-category/${categoryData.id}`, categoryData, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+          },
+        })
+        const updatedCategory = response.data.data
+        commit('UPDATE_CATEGORY', updatedCategory)
+      } catch (error) {
+        console.error('Error updating category:', error)
       }
     },
+    async deleteCategory({ commit }, categoryId) {
+      try {
+        await axios.delete(`http://localhost:8000/api/categories/delete/${categoryId}`, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+          },
+        })
+        commit('DELETE_CATEGORY', categoryId)
+      } catch (error) {
+        console.error('Error deleting category:', error)
+      }
+    },
+    async fetchCategories({ commit }, payload = { page: 1 }) {
+      const { page } = payload;
+      try {
+        const response = await axios.get(`http://localhost:8000/api/categories/paginate?page=${page}`, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+          }
+        });
+        commit('SET_CATEGORIES', response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    },
+   
+
   },
+
 })
 
 export default store

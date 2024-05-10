@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('login', [AuthController::class, 'login']);
 //Route::put('update-profile', [AuthController::class, 'updateProfile']);
@@ -21,6 +22,10 @@ Route::get('user/{id}', [AuthController::class, 'showUser']);
 
 
 Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], function () {
+    Route::post('add-category', [CategoryController::class, "store"]);
+    Route::put('update-category/{cat_id}', [CategoryController::class, "update"]);
+    Route::delete('categories/delete/{id}',  [CategoryController::class, "destroy"]);
+
 
     Route::get('roles', [RoleController::class, "index"]);
     Route::get('roles/{id}', [RoleController::class, "showRole"]);
@@ -33,7 +38,11 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
 
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::patch('users/{id}', [App\Http\Controllers\UserController::class]);
+    Route::get('categories/search/{designation}', [App\Http\Controllers\CategoryController::class, 'search']);
+
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
-    Route::post('add-category', [CategoryController::class, "store"]);
-    Route::get('categories', [CategoryController::class, "index"]);
+
+    Route::get('categories/paginate', [CategoryController::class, "index"]);
+
+    // Route::get('categories', [CategoryController::class, "index"]);
 });
