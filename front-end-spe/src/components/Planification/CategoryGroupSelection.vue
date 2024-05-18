@@ -25,7 +25,7 @@
                   class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 >
                   <option v-for="group in groups" :key="group.id" :value="group">
-                    {{ group.start_date }}
+                    {{ group.id }}
                   </option>
                 </select>
               </div>
@@ -48,8 +48,8 @@
   
   // Assuming you have fetched the "categories" and "groups" data from the server
   const categories = ref([
-    { id: 1, designation: 'Category 1' },
-    { id: 2, designation: 'Category 2' },
+    { id: 1, designation: "  Contrôle d'échange des réfrigérants NORIA" },
+    { id: 2, designation: "Essai ventilateurs, réchauffeurs d’air rotatifs RAR" },
     // Add more categories as needed
   ])
   const groups = ref([

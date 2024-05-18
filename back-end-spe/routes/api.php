@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ControleController;
+use App\Http\Controllers\GroupeController;
 use App\Http\Controllers\RoleController;
+use App\Models\Controle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +46,15 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
 
     Route::get('categories/paginate', [CategoryController::class, "index"]);
+    Route::get('categories', [CategoryController::class, "getAllCategories"]);
+
+    Route::get('groupe', [GroupeController::class, "index"]);
+    Route::post('groupe', [GroupeController::class, "store"]);
+
+    Route::post('controle', [ControleController::class, "store"]);
+    Route::get('controle/data', [ControleController::class, "getControlData"]);
+    Route::get('controle/data/{id}', [ControleController::class, "getControlDataById"]);
+    Route::get('controles', [ControleController::class, 'index']);
 
     // Route::get('categories', [CategoryController::class, "index"]);
 });

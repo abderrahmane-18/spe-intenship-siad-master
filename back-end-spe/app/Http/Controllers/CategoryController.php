@@ -47,6 +47,15 @@ class CategoryController extends Controller
 
         //return response()->json($categories);
     }
+    public function getAllCategories()
+    {
+        // $categories = Category::paginate(3);
+        $categories = Category::get();
+
+        return response()->json($categories);
+
+        //return response()->json($categories);
+    }
 
     public function search()
     {

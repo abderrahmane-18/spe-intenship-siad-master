@@ -1,77 +1,92 @@
-
-
 <script setup>
-import PermissionList from '@/components/PermissionList.vue'
-import BreadcrumbDefault from '@/components/Breadcrumbs/BreadcrumbDefault.vue'
-import Dashboard from '@/views/Dashboard.vue'
-const pageTitle = ref('Roles ')
+import PermissionList from "@/components/PermissionList.vue";
+import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
+import Dashboard from "@/views/Dashboard.vue";
+const pageTitle = ref("Groupes ");
 
-import createRole from '@/components/Roles/createRole.vue'
-import { ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+import createRole from "@/components/Roles/createRole.vue";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { computed, inject } from "vue";
+const store = useStore();
 
+store.dispatch("fetchGroupes");
 
-const groupes = ref([
-  { id: 1, start_date: '2023-05-01' },
-  { id: 2, start_date: '2023-06-15' },
-  { id: 3, start_date: '2023-07-20' },
-  // Add more groupe data as needed
-])
+const groupes = computed(() => store.state.groupes);
+// Inject the groupes computed property from parent component
 </script>
 
 <template>
   <Dashboard>
-        <div class="mx-auto max-w-7xl">
-          
-            <BreadcrumbDefault :pageTitle="pageTitle" />
-            <div class="flex flex-col">
-    <div class="overflow-x-auto">
-      <div class="align-middle inline-block min-w-full">
-        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  ID
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Start Date
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="groupe in groupes" :key="groupe.id" class="hover:bg-gray-100">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {{ groupe.id }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ groupe.start_date }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+    <div class="mx-auto max-w-7xl">
+      <BreadcrumbDefault :pageTitle="pageTitle" />
+      <div class="flex flex-col">
+        <div class="overflow-x-auto">
+          <div class="align-middle inline-block min-w-full">
+            <div
+              class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+            >
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      ID
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Start Date
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr
+                    v-for="groupe in groupes"
+                    :key="groupe.id"
+                    class="hover:bg-gray-100"
                   >
-                    Edit
-                  </button>
-                  <button
-                    class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                    >
+                      {{ groupe.id }}
+                    </td>
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    >
+                      {{ groupe.start_date }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-   
-    <!--  Groupe UI
+
+      <!--  Groupe UI
   <div class="container mx-auto py-8">
     <div class="bg-white rounded-lg shadow-lg p-6">
       <div class="flex justify-between mb-4">
@@ -123,7 +138,7 @@ const groupes = ref([
     </div>
   </div>
   -->
-  <!-- 
+      <!-- 
   <div class="flex flex-col">
     <div class="overflow-x-auto">
       <div class="align-middle inline-block min-w-full">
@@ -170,6 +185,6 @@ const groupes = ref([
     </div>
   </div>
   -->
-</div>
-    </Dashboard>
+    </div>
+  </Dashboard>
 </template>

@@ -1,29 +1,45 @@
 <template>
-    <div class="flex flex-col">
-      <div class="overflow-x-auto">
-        <div class="align-middle inline-block min-w-full">
-          <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Equipment
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="planification in planifications" :key="planification.id" class="hover:bg-gray-100">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ formatDate(planification.date) }}
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ planification.equipment }}
+  <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="align-middle inline-block min-w-full">
+        <div
+          class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+        >
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Date
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Equipment
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr
+                v-for="planification in planifications"
+                :key="planification.id"
+                class="hover:bg-gray-100"
+              >
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(planification.date) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ planification.equipment }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
@@ -55,25 +71,53 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
-
+import { ref } from "vue";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 // Assuming you have fetched the "planifications" data from the server
 const planifications = ref([
-  { id: 1, date: '2023-06-01', equipment: 21 },
-  { id: 2, date: '2023-06-15', equipment: 22 },
+  { id: 1, date: "2023-06-01", equipment: 21 },
+  { id: 2, date: "2023-06-15", equipment: 22 },
   // Add more planifications as needed
-])
+]);
 
 const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString()
-}
+  const date = new Date(dateString);
+  return date.toLocaleDateString();
+};
 
 const removePlanification = (planification) => {
   // Remove the planification from the list
-}
+};
 
 const exportPlanification = () => {
-  // Export the planification list as an Excel or PDF file
-}
+  const exportType = window.confirm("Export to Excel or PDF?")
+    ? "excel"
+    : "pdf";
+
+  if (exportType === "excel") {
+    exportToExcel();
+  } else {
+    exportToPDF();
+  }
+};
+const exportToExcel = () => {
+  const worksheet = XLSX.utils.json_to_sheet(planifications.value);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Planifications");
+  XLSX.writeFile(workbook, "planifications.xlsx");
+};
+
+const exportToPDF = () => {
+  const doc = new jsPDF();
+  doc.autoTable({
+    head: [["Date", "Equipment"]],
+    body: planifications.value.map((planification) => [
+      formatDate(planification.date),
+      planification.equipment,
+    ]),
+  });
+  doc.save("planifications.pdf");
+};
 </script>
