@@ -11,8 +11,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'designation' => 'required|string|max:255',
-            'codification' => 'required',
-            'description' => 'required|min:8|max:20',
+            'codification' => 'required|string',
+            'description' => 'required|string',
 
         ]);
 
@@ -27,6 +27,7 @@ class CategoryController extends Controller
             'data' => $category
         ], 201);
     }
+    /*
     public function index()
     {
         $category = Category::get();
@@ -34,5 +35,61 @@ class CategoryController extends Controller
             'success' => true,
             'categories' =>  $category,
         ]);
+    }
+*/
+
+    public function index()
+    {
+        // $categories = Category::paginate(3);
+        $categories = Category::paginate(4);
+
+        return response()->json($categories);
+
+        //return response()->json($categories);
+    }
+    public function getAllCategories()
+    {
+        // $categories = Category::paginate(3);
+        $categories = Category::get();
+
+        return response()->json($categories);
+
+        //return response()->json($categories);
+    }
+
+    public function search()
+    {
+        $searchQuery = request('query');
+        $categories = Category::where('designation', 'like,"%{$ $searchQuery}')->get();
+        return  response()->json([
+            'success' => true,
+            'categories' => $categories
+        ]);
+    }
+    public function update(Request $request, $id)
+    {
+
+        $category = Category::find($id);
+        $request->validate([
+            'designation' => 'required|string|max:255',
+            'codification' => 'required|string',
+            'description' => 'required|string',
+
+        ]);
+        $data = [
+            'designation' => $request->designation,
+            'codification' => $request->codification,
+            'description' => $request->description,
+        ];
+        $category->update($data);
+        $result = array('status' => true, 'message' => 'category hase been updated succefully', 'data' => $category);
+        return response()->json($result, 200);
+    }
+    public function destroy($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return response()->json(['message' => 'Category deleted successfully']);
     }
 }

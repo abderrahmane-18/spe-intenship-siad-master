@@ -104,6 +104,30 @@ import createRole from '@/components/Roles/createRole.vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+
+
+// Assuming you have fetched the "groupes" data from the server
+const groupes = ref([
+  { id: 1, start_date: '2023-05-01' },
+  { id: 2, start_date: '2023-06-15' },
+  { id: 3, start_date: '2023-07-20' },
+  // Add more groupe data as needed
+])
+const controles = ref([
+  {
+    id: 1,
+    category: { id: 1, designation: 'Category 1' },
+    group: { id: 2, start_date: '2023-05-01' },
+    number_equipment: 21
+  },
+  {
+    id: 2,
+    category: { id: 1, designation: 'Category 1' },
+    group: { id: 2, start_date: '2023-05-01' },
+    number_equipment: 22
+  },
+  // Add more controle data as needed
+])
 </script>
 
 <template>
@@ -111,8 +135,65 @@ import { useStore } from 'vuex'
         <div class="mx-auto max-w-7xl">
           
             <BreadcrumbDefault :pageTitle="pageTitle" />
+            <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="align-middle inline-block min-w-full">
+        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  ID
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Group
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Equipment
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="controle in controles" :key="controle.id" class="hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ controle.id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ controle.category.designation }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ controle.group.start_date }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ controle.number_equipment }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
    
-    
+    <!--  Groupe UI
   <div class="container mx-auto py-8">
     <div class="bg-white rounded-lg shadow-lg p-6">
       <div class="flex justify-between mb-4">
@@ -121,7 +202,7 @@ import { useStore } from 'vuex'
           <select class="w-full border border-gray-300 rounded-md px-3 py-2">
             <option>January</option>
             <option>February</option>
-            <!-- Add more options as needed -->
+        
           </select>
         </div>
         <div class="w-1/3">
@@ -129,7 +210,7 @@ import { useStore } from 'vuex'
           <select class="w-full border border-gray-300 rounded-md px-3 py-2">
             <option>Essai 1</option>
             <option>Essai 2</option>
-            <!-- Add more options as needed -->
+       
           </select>
         </div>
       </div>
@@ -163,6 +244,54 @@ import { useStore } from 'vuex'
       </div>
     </div>
   </div>
+  -->
+  <!-- 
+  <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="align-middle inline-block min-w-full">
+        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  ID
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Start Date
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="groupe in groupes" :key="groupe.id" class="hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ groupe.id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ groupe.start_date }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="inline-flex items-center px-3 py-2 ml-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  -->
 </div>
     </Dashboard>
 </template>
