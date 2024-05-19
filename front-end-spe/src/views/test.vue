@@ -1,188 +1,469 @@
 <template>
-    
-    <body>
-        
-    
-                        <!-- Sidebar Toggle (Topbar) -->
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-    
-                        <!-- Topbar Search -->
-                        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-    
-                        <!-- Topbar Navbar -->
-                        <ul class="navbar-nav ml-auto">
-    
-                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                            <li class="nav-item dropdown no-arrow d-sm-none">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-search fa-fw"></i>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                                    <form class="form-inline mr-auto w-100 navbar-search">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button">
-                                                    <i class="fas fa-search fa-sm"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-    
-                            <!-- Nav Item - Alerts -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-bell fa-fw"></i>
-                                    <!-- Counter - Alerts -->
-                                    <span class="badge badge-danger badge-counter">3+</span>
-                                </a>
-                                <!-- Dropdown - Alerts -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                                    <h6 class="dropdown-header">
-                                        Alerts Center
-                                    </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 12, 2019</div>
-                                            <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-donate text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 7, 2019</div>
-                                            $290.29 has been deposited into your account!
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-warning">
-                                                <i class="fas fa-exclamation-triangle text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">December 2, 2019</div>
-                                            Spending Alert: We've noticed unusually high spending for your account.
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                                </div>
-                            </li>
-    
-                            <!-- Nav Item - Messages -->
-                            <li class="nav-item dropdown no-arrow mx-1">
-                                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-envelope fa-fw"></i>
-                                    <!-- Counter - Messages -->
-                                    <span class="badge badge-danger badge-counter">7</span>
-                                </a>
-                                <!-- Dropdown - Messages -->
-                                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
-                                    <h6 class="dropdown-header">
-                                        Message Center
-                                    </h6>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="dropdown-list-image mr-3">
-                                            <img class="rounded-circle" src="./img/undraw_profile_1.svg" alt="...">
-                                            <div class="status-indicator bg-success"></div>
-                                        </div>
-                                        <div class="font-weight-bold">
-                                            <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                                problem I've been having.</div>
-                                            <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="dropdown-list-image mr-3">
-                                            <img class="rounded-circle" src="./img/undraw_profile_2.svg" alt="...">
-                                            <div class="status-indicator"></div>
-                                        </div>
-                                        <div>
-                                            <div class="text-truncate">I have the photos that you ordered last month, how
-                                                would you like them sent to you?</div>
-                                            <div class="small text-gray-500">Jae Chun · 1d</div>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="dropdown-list-image mr-3">
-                                            <img class="rounded-circle" src="./img/undraw_profile_3.svg" alt="...">
-                                            <div class="status-indicator bg-warning"></div>
-                                        </div>
-                                        <div>
-                                            <div class="text-truncate">Last month's report looks great, I am very happy with
-                                                the progress so far, keep up the good work!</div>
-                                            <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="dropdown-list-image mr-3">
-                                            <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="...">
-                                            <div class="status-indicator bg-success"></div>
-                                        </div>
-                                        <div>
-                                            <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                                told me that people say this to all dogs, even if they aren't good...</div>
-                                            <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                        </div>
-                                    </a>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                                </div>
-                            </li>
-    
-                            <div class="topbar-divider d-none d-sm-block"></div>
-    
-                            <!-- Nav Item - User Information -->
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                    <img class="img-profile rounded-circle" src="./img/undraw_profile.svg">
-                                </a>
-                                <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Profile
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Settings
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Activity Log
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Logout
-                                    </a>
-                                </div>
-                            </li>
-    
-                        </ul>
-    
-                    </body>
-    </template>
+  <Dashboard>
+    <div class="mx-auto max-w-270">
+      <!-- Breadcrumb Start -->
+
+      <div class="mx-auto max-w-7xl">
+        <BreadcrumbDefault :pageTitle="pageTitle" />
+        <div class="container mx-auto py-8">
+          <div>
+            <div class="mb-4">
+              <label
+                for="control-design"
+                class="block text-gray-700 font-bold mb-2"
+                >Control Design</label
+              >
+              <select
+                id="control-design"
+                v-model="selectedControlDesign"
+                class="border border-gray-400 p-2 w-full"
+                @change="updateGroupOptions"
+              >
+                <option value="" disabled>Select a Control Design</option>
+                <option
+                  v-for="category in controlData"
+                  :key="category.id"
+                  :value="category"
+                >
+                  {{ category.designation }}
+                </option>
+              </select>
+            </div>
+
+            <div v-if="selectedControlDesign" class="mb-4">
+              <label class="block text-gray-700 font-bold mb-2">Groups</label>
+              <div class="flex flex-wrap">
+                <div
+                  v-for="group in selectedControlDesign.groupes"
+                  :key="group.number_group"
+                  class="mr-4"
+                >
+                  <label class="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      v-model="selectedGroups"
+                      :value="group"
+                      class="form-checkbox"
+                      @change="updateEquipmentOptions"
+                    />
+                    <span class="ml-2">{{ group.number_group }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-for="group in selectedGroups"
+              :key="group.number_group"
+              class="mb-4"
+            >
+              <label class="block text-gray-700 font-bold mb-2">
+                Equipments for {{ group.number_group }}
+              </label>
+              <div class="flex flex-wrap">
+                <div
+                  v-for="equipment in group.equipments"
+                  :key="equipment"
+                  class="mr-4"
+                >
+                  <label class="inline-flex items-center">
+                    <input
+                      type="checkbox"
+                      v-model="selectedEquipments[group.number_group]"
+                      :value="equipment"
+                      class="form-checkbox"
+                    />
+                    <span class="ml-2">{{ equipment }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div>
+              <!-- Month Selection -->
+              <div class="mb-4">
+                <label
+                  for="month-select"
+                  class="block text-gray-700 font-bold mb-2"
+                >
+                  Select Month
+                </label>
+                <select
+                  id="month-select"
+                  v-model="selectedMonth"
+                  class="border border-gray-400 p-2 w-full"
+                >
+                  <option value="" disabled>Select a Month</option>
+                  <option
+                    v-for="(month, index) in months"
+                    :key="index"
+                    :value="index"
+                  >
+                    {{ month }}
+                  </option>
+                </select>
+              </div>
+              <!-- Year Selection -->
+              <div class="mb-4">
+                <label
+                  for="year-select"
+                  class="block text-gray-700 font-bold mb-2"
+                >
+                  Select Year
+                </label>
+                <select
+                  id="year-select"
+                  v-model="selectedYear"
+                  class="border border-gray-400 p-2 w-full"
+                >
+                  <option value="" disabled>Select a Year</option>
+                  <option v-for="year in years" :key="year" :value="year">
+                    {{ year }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-4 flex justify-between">
+              <button
+                class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="getSelectedData"
+                :disabled="!selectedMonth"
+              >
+                Add Data
+              </button>
+              <button
+                class="bg-orange-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                @click="resetData"
+              >
+                Reset Data
+              </button>
+            </div>
+          </div>
+          <table class="w-full border-collapse">
+            <!-- Table header -->
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="border border-black py-1 px-2 font-bold">N°</th>
+                <th class="border border-black py-1 px-2 font-bold">
+                  Désignation du contrôle
+                </th>
+                <th class="border border-black py-1 px-2 font-bold">GR</th>
+                <th class="border border-black py-1 px-2 font-bold">Number</th>
+                <th
+                  colspan="5"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  S1
+                </th>
+                <th
+                  colspan="5"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  S2
+                </th>
+                <th
+                  colspan="5"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  S3
+                </th>
+                <th
+                  colspan="5"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  S4
+                </th>
+              </tr>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+
+                <!-- <th
+                    v-for="(day, index) in days"
+                    :key="index"
+                    class="border border-black py-1 px-2 font-bold text-center"
+                  >
+                    {{ day }}
+                  </th> -->
+                <th
+                  v-for="(day, index) in weekDays"
+                  :key="index"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  {{ day }}
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <template
+                v-for="(design, index_designation) in addedData"
+                :key="index_designation"
+              >
+                <template
+                  v-for="(groupe, index_group) in design.groupes"
+                  :key="index_group"
+                >
+                  <template
+                    v-for="(equipement, index_equipement) in groupe.equipments"
+                    :key="index_equipement"
+                  >
+                    <tr>
+                      <template
+                        v-if="index_equipement == 0 && index_group == 0"
+                      >
+                        <td
+                          :rowspan="groupLength(design)"
+                          class="border border-black py-1 px-2"
+                        >
+                          {{ design.id }}
+                        </td>
+                        <td
+                          :rowspan="groupLength(design)"
+                          class="border border-black py-1 px-2"
+                        >
+                          {{ design.designation }}
+                        </td>
+                      </template>
+
+                      <td
+                        v-if="index_equipement == 0"
+                        :rowspan="calc_equi_for_each_group(groupe)"
+                        class="border border-black py-1 px-2"
+                      >
+                        {{ groupe.number_group }}
+                      </td>
+                      <td class="border border-black py-1 px-2">
+                        {{ equipement }}
+                      </td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                      <td class="border border-black py-1 px-2"></td>
+                    </tr>
+                  </template>
+                </template>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <br />
+    </div>
+  </Dashboard>
+</template>
+<script setup>
+import { computed, ref, onMounted, watch } from "vue";
+import { useStore } from "vuex";
+import axios from "axios";
+import Dashboard from "@/views/Dashboard.vue";
+import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+const store = useStore();
+const controlData = ref([]);
+const selectedControlDesignId = ref(null);
+function groupLength(design) {
+  return design.groupes.reduce((acc, curr) => acc + curr.equipments.length, 0);
+}
+const newControlDesignation = ref("");
+function calc_equi_for_each_group(groupe) {
+  return groupe.equipments.length;
+}
+
+const selectedControlDesign = ref(null);
+const selectedGroup = ref(null);
+const selectedEquipment = ref([]);
+const groupOptions = ref([]);
+const equipmentOptions = ref([]);
+const selectedEquipments = ref({});
+const selectedGroups = ref([]);
+
+const fetchControlData = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8000/api/controle/data",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    controlData.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateGroupOptions = () => {
+  if (selectedControlDesign.value) {
+    selectedGroups.value = [];
+    selectedEquipments.value = {};
+  }
+};
+
+const updateEquipmentOptions = () => {
+  selectedEquipments.value = {};
+  selectedGroups.value.forEach((group) => {
+    selectedEquipments.value[group.number_group] = [];
+  });
+};
+const selectedData = ref([]);
+const addedData = ref([]); // New reactive variable to store added data
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const selectedMonth = ref(null);
+const weekDays = ref([]);
+const sendData = () => {
+  console.log("grpcs");
+  if (selectedControlDesign.value) {
+    const selectedControlDesignData = {
+      id: selectedControlDesign.value.id,
+      designation: selectedControlDesign.value.designation,
+      groupes: selectedGroups.value.map((group) => ({
+        number_group: group.number_group,
+        equipments: selectedEquipments.value[group.number_group],
+      })),
+    };
+    selectedData.value = [selectedControlDesignData];
+  } else {
+    selectedData.value = [];
+  }
+};
+
+const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030]; // Add more years as needed
+const days = [
+  "Di",
+  "Lu",
+  "Ma",
+  "Me",
+  "Jeu",
+  "Di",
+  "Lu",
+  "Ma",
+  "Me",
+  "Jeu",
+  "Di",
+  "Lu",
+  "Ma",
+  "Me",
+  "Jeu",
+  "Di",
+  "Lu",
+  "Ma",
+  "Me",
+  "Jeu",
+];
+
+const selectedYear = ref(new Date().getFullYear());
+const getSelectedData = () => {
+  sendData(); // Populate selectedData
+  addSelectedData();
+  //updateWeekDays();
+  console.log("Selected Data:", selectedData.value);
+  // Here, you can send the selectedData.value to the server or perform any desired action
+};
+const addSelectedData = () => {
+  console.log("Selected Data 5");
+
+  if (selectedData.value.length > 0) {
+    const existingDesign = addedData.value.find(
+      (design) => design.id === selectedData.value[0].id
+    );
+    if (existingDesign) {
+      toast.warning("This control design has already been added.", {
+        position: "top-center",
+      });
+    } else {
+      addedData.value = [...addedData.value, ...selectedData.value];
+      localStorage.setItem("addedData", JSON.stringify(addedData.value));
+      clearSelectedData();
+    }
+  }
+};
+
+const updateWeekDays = () => {
+  if (selectedMonth.value !== null && selectedYear.value !== null) {
+    const firstDayOfMonth = new Date(
+      selectedYear.value,
+      selectedMonth.value,
+      1
+    ).getDay();
+    console.log("firstDayOfMonth", firstDayOfMonth);
+    console.log("selectedMonth", selectedMonth.value);
+    const daysOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    let startIndex = firstDayOfMonth;
+
+    // Remove Fridays and Saturdays
+    let weekDayList = [];
+    for (let week = 0; week < 4; week++) {
+      let count = 0;
+      while (count < 5) {
+        if (
+          daysOfWeek[startIndex % 7] !== "Fr" &&
+          daysOfWeek[startIndex % 7] !== "Sa"
+        ) {
+          weekDayList.push(daysOfWeek[startIndex % 7]);
+          count++;
+        }
+        startIndex++;
+      }
+    }
+
+    weekDays.value = weekDayList;
+  } else {
+    console.log("ert");
+  }
+};
+
+const resetData = () => {
+  addedData.value = [];
+  localStorage.removeItem("addedData");
+  selectedMonth.value = null;
+};
+
+const clearSelectedData = () => {
+  selectedControlDesign.value = null;
+  selectedGroups.value = [];
+  selectedEquipments.value = {};
+  selectedData.value = [];
+};
+watch(selectedMonth, updateWeekDays);
+
+onMounted(() => {
+  fetchControlData();
+  const storedData = localStorage.getItem("addedData");
+  if (storedData) {
+    addedData.value = JSON.parse(storedData);
+  }
+});
+</script>

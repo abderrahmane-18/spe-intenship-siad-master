@@ -78,10 +78,57 @@
                 </div>
               </div>
             </div>
-            <div class="mb-4">
+            <div>
+              <!-- Month Selection -->
+              <div class="mb-4">
+                <label
+                  for="month-select"
+                  class="block text-gray-700 font-bold mb-2"
+                >
+                  Select Month
+                </label>
+                <select
+                  id="month-select"
+                  v-model="selectedMonth"
+                  class="border border-gray-400 p-2 w-full"
+                >
+                  <option value="" disabled>Select a Month</option>
+                  <option
+                    v-for="(month, index) in months"
+                    :key="index"
+                    :value="index"
+                  >
+                    {{ month }}
+                  </option>
+                </select>
+              </div>
+              <!-- Year Selection -->
+              <div class="mb-4">
+                <label
+                  for="year-select"
+                  class="block text-gray-700 font-bold mb-2"
+                >
+                  Select Year
+                </label>
+                <select
+                  id="year-select"
+                  v-model="selectedYear"
+                  class="border border-gray-400 p-2 w-full"
+                >
+                  <option value="" disabled>Select a Year</option>
+                  <option v-for="year in years" :key="year" :value="year">
+                    {{ year }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-4 flex justify-between">
               <button
                 class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 @click="getSelectedData"
+                :disabled="
+                  selectedMonth === null || selectedMonth === undefined
+                "
               >
                 Add Data
               </button>
@@ -133,13 +180,29 @@
                 <th></th>
                 <th></th>
                 <th></th>
+
+                <!-- <th
+                  v-for="(day, index) in days"
+                  :key="index"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  {{ day }}
+                </th> -->
                 <th
-                  v-for="day in 20"
-                  :key="day"
+                  v-for="(day, index) in weekDays"
+                  :key="index"
                   class="border border-black py-1 px-2 font-bold text-center"
                 >
                   {{ day }}
                 </th>
+                <!-- <th
+                  v-for="({ day, date }, index) in columnDates"
+                  :key="index"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  {{ day }} <br />{{ date }}
+                </th>
+              </tr> -->
               </tr>
             </thead>
 
@@ -184,26 +247,21 @@
                       <td class="border border-black py-1 px-2">
                         {{ equipement }}
                       </td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
-                      <td class="border border-black py-1 px-2"></td>
+
+                      <template v-for="n in 20" :key="n">
+                        <td
+                          @click="
+                            selectDate(
+                              $event,
+                              index_equipement,
+                              index_group,
+                              index_designation
+                            )
+                          "
+                          :id="`cell-${index_designation}-${index_group}-${index_equipement}`"
+                          class="border border-black py-1 px-2 cursor-pointer"
+                        ></td>
+                      </template>
                     </tr>
                   </template>
                 </template>
@@ -217,7 +275,7 @@
   </Dashboard>
 </template>
 <script setup>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
 import Dashboard from "@/views/Dashboard.vue";
@@ -274,8 +332,24 @@ const updateEquipmentOptions = () => {
 };
 const selectedData = ref([]);
 const addedData = ref([]); // New reactive variable to store added data
-
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const selectedMonth = ref(null);
+const weekDays = ref([]);
 const sendData = () => {
+  console.log("grpcs");
   if (selectedControlDesign.value) {
     const selectedControlDesignData = {
       id: selectedControlDesign.value.id,
@@ -290,13 +364,21 @@ const sendData = () => {
     selectedData.value = [];
   }
 };
+
+const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030]; // Add more years as needed
+const selectedDate = ref(null);
+
+const selectedYear = ref(new Date().getFullYear());
 const getSelectedData = () => {
   sendData(); // Populate selectedData
   addSelectedData();
+  //updateWeekDays();
   console.log("Selected Data:", selectedData.value);
   // Here, you can send the selectedData.value to the server or perform any desired action
 };
 const addSelectedData = () => {
+  console.log("Selected Data 5");
+
   if (selectedData.value.length > 0) {
     const existingDesign = addedData.value.find(
       (design) => design.id === selectedData.value[0].id
@@ -308,13 +390,112 @@ const addSelectedData = () => {
     } else {
       addedData.value = [...addedData.value, ...selectedData.value];
       localStorage.setItem("addedData", JSON.stringify(addedData.value));
+      localStorage.setItem("weekDays", JSON.stringify(weekDays.value));
+
       clearSelectedData();
     }
   }
 };
+
+const updateWeekDays = () => {
+  if (selectedMonth.value !== null && selectedYear.value !== null) {
+    const firstDayOfMonth = new Date(
+      selectedYear.value,
+      selectedMonth.value,
+      1
+    ).getDay();
+    console.log("firstDayOfMonth", firstDayOfMonth);
+    console.log("selectedMonth", selectedMonth.value);
+    const daysOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    let startIndex = firstDayOfMonth;
+
+    // Remove Fridays and Saturdays
+    let weekDayList = [];
+    for (let week = 0; week < 4; week++) {
+      let count = 0;
+      while (count < 5) {
+        if (
+          daysOfWeek[startIndex % 7] !== "Fr" &&
+          daysOfWeek[startIndex % 7] !== "Sa"
+        ) {
+          weekDayList.push(daysOfWeek[startIndex % 7]);
+          count++;
+        }
+        startIndex++;
+      }
+    }
+
+    weekDays.value = weekDayList;
+  }
+};
+
+const formattedDates = computed(() => {
+  const dates = [];
+  const year = selectedYear.value;
+  const month = selectedMonth.value;
+
+  if (month !== null && weekDays.value.length > 0) {
+    for (let i = 0; i < weekDays.value.length; i++) {
+      const day = weekDays.value[i];
+      const date = new Date(year, month, getDateForWeekday(day, month, year));
+      dates.push({ day, date: date.toLocaleDateString() });
+    }
+  }
+
+  return dates;
+});
+
+function getDateForWeekday(weekday, month, year) {
+  const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const weekdayIndex = dayNames.indexOf(weekday);
+  let dayOffset = weekdayIndex - firstDayOfMonth;
+  if (dayOffset < 0) dayOffset += 7;
+  return 1 + dayOffset;
+}
+
+const selectDate = (event, equipmentIndex, groupIndex, designIndex) => {
+  const cell = event.target;
+  const cellId = `cell-${designIndex}-${groupIndex}-${equipmentIndex}`;
+
+  if (cell.id === cellId) {
+    cell.classList.toggle("bg-blue-500");
+    cell.classList.toggle("text-white");
+
+    // Calculate the date based on the selected month, year, and the column of the clicked cell
+    var column = cell.cellIndex; // Get the index of the column
+    column = column - 4;
+    console.log("column", column);
+
+    const weekSegment = Math.floor(column / 5); // Determine the week segment (0 for S1, 1 for S2, etc.)
+    console.log("weekSegment", weekSegment);
+    const dayIndex = column % 5; // Get the day index within the week segment
+    const baseDate = new Date(
+      selectedYear.value,
+      selectedMonth.value,
+      getDateForWeekday(
+        weekDays.value[dayIndex],
+        selectedMonth.value,
+        selectedYear.value
+      )
+    );
+    const cellDate = new Date(baseDate);
+    cellDate.setDate(baseDate.getDate() + weekSegment * 7); // Adjust the date based on the week segment
+
+    console.log("Date:", cellDate.toLocaleDateString());
+  }
+};
+
 const resetData = () => {
   addedData.value = [];
+  weekDays.value.splice(0, weekDays.value.length); // Clear the weekDays array
+
+  localStorage.removeItem("weekDays");
   localStorage.removeItem("addedData");
+  clearSelectedData();
+  selectedMonth.value = null;
+
+  // weekDays = [];
 };
 
 const clearSelectedData = () => {
@@ -323,12 +504,17 @@ const clearSelectedData = () => {
   selectedEquipments.value = {};
   selectedData.value = [];
 };
+watch(selectedMonth, updateWeekDays);
 
 onMounted(() => {
   fetchControlData();
   const storedData = localStorage.getItem("addedData");
   if (storedData) {
     addedData.value = JSON.parse(storedData);
+  }
+  const storedWeekDays = localStorage.getItem("weekDays");
+  if (storedWeekDays) {
+    weekDays.value = JSON.parse(storedWeekDays);
   }
 });
 </script>
