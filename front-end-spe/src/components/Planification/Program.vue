@@ -126,9 +126,6 @@
               <button
                 class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 @click="getSelectedData"
-                :disabled="
-                  selectedMonth === null || selectedMonth === undefined
-                "
               >
                 Add Data
               </button>
@@ -189,12 +186,19 @@
                   {{ day }}
                 </th> -->
                 <th
+                  v-for="({ day }, index) in formattedDates"
+                  :key="index"
+                  class="border border-black py-1 px-2 font-bold text-center"
+                >
+                  {{ day }} <br />
+                </th>
+                <!-- <th
                   v-for="(day, index) in weekDays"
                   :key="index"
                   class="border border-black py-1 px-2 font-bold text-center"
                 >
                   {{ day }}
-                </th>
+                </th> -->
                 <!-- <th
                   v-for="({ day, date }, index) in columnDates"
                   :key="index"
@@ -248,19 +252,28 @@
                         {{ equipement }}
                       </td>
 
-                      <template v-for="n in 20" :key="n">
+                      <template v-for="(date, n) in formattedDates" :key="n">
                         <td
                           @click="
                             selectDate(
                               $event,
                               index_equipement,
                               index_group,
-                              index_designation
+                              index_designation,
+                              date.date
                             )
                           "
                           :id="`cell-${index_designation}-${index_group}-${index_equipement}`"
                           class="border border-black py-1 px-2 cursor-pointer"
-                        ></td>
+                        >
+                          {{
+                            design.id +
+                            " " +
+                            groupe.number_group +
+                            " " +
+                            equipement
+                          }}
+                        </td>
                       </template>
                     </tr>
                   </template>
@@ -372,6 +385,7 @@ const selectedYear = ref(new Date().getFullYear());
 const getSelectedData = () => {
   sendData(); // Populate selectedData
   addSelectedData();
+
   //updateWeekDays();
   console.log("Selected Data:", selectedData.value);
   // Here, you can send the selectedData.value to the server or perform any desired action
@@ -391,6 +405,7 @@ const addSelectedData = () => {
       addedData.value = [...addedData.value, ...selectedData.value];
       localStorage.setItem("addedData", JSON.stringify(addedData.value));
       localStorage.setItem("weekDays", JSON.stringify(weekDays.value));
+      localStorage.setItem("selectedMonth", selectedMonth.value);
 
       clearSelectedData();
     }
@@ -433,15 +448,44 @@ const formattedDates = computed(() => {
   const dates = [];
   const year = selectedYear.value;
   const month = selectedMonth.value;
-
+  console.log();
   if (month !== null && weekDays.value.length > 0) {
-    for (let i = 0; i < weekDays.value.length; i++) {
-      const day = weekDays.value[i];
-      const date = new Date(year, month, getDateForWeekday(day, month, year));
-      dates.push({ day, date: date.toLocaleDateString() });
+    console.log("weekDays ", weekDays.value.length);
+    let j = 0;
+    for (let index = 0; index < 28; index++) {
+      for (let i = 0; i < 5; i++) {
+        const day = weekDays.value[i];
+        let date = "";
+        if (index == 0) {
+          date = new Date(
+            year,
+            month,
+            getDateForWeekday(day, month, year) + index
+          );
+        } else {
+          date = new Date(
+            year,
+            month,
+            getDateForWeekday(day, month, year) + index - 1
+          );
+        }
+        //  console.log("current date ", date.getDate());
+        console.log("date i  ", weekDays.value.length);
+
+        dates.push({ day, date: date.toLocaleDateString() });
+        j += 7;
+      }
+      index += 7;
     }
   }
+  let k = 0;
+  // for (let index = 0; index < dates.length; index++) {
+  //   console.log(dates[index]);
+  //   dates[i].date = dates[i].date + k;
+  //   k += 7;
+  // }
 
+  console.log("datae ", dates);
   return dates;
 });
 
@@ -453,36 +497,45 @@ function getDateForWeekday(weekday, month, year) {
   if (dayOffset < 0) dayOffset += 7;
   return 1 + dayOffset;
 }
+store.dispatch("fetchControles");
 
-const selectDate = (event, equipmentIndex, groupIndex, designIndex) => {
+const controles = computed(() => store.state.controles);
+const selectDate = (
+  event,
+  equipmentIndex,
+  groupIndex,
+  designIndex,
+  cellDate
+) => {
   const cell = event.target;
-  const cellId = `cell-${designIndex}-${groupIndex}-${equipmentIndex}`;
+  // const cellId = `cell-${designIndex}-${groupIndex}-${equipmentIndex}`;
+  //console.log("cellId ,", cellId);
+  //if (cell.id === cellId) {
+  cell.classList.toggle("bg-blue-500");
+  cell.classList.toggle("text-white");
 
-  if (cell.id === cellId) {
-    cell.classList.toggle("bg-blue-500");
-    cell.classList.toggle("text-white");
+  //const controles = computed(() => store.state.controles);
+  console.log("Date:", cellDate);
+  const designId = addedData.value[designIndex].id;
+  const groupNumber =
+    addedData.value[designIndex].groupes[groupIndex].number_group;
+  const equipment =
+    addedData.value[designIndex].groupes[groupIndex].equipments[equipmentIndex];
+  console.log("designId", designId);
+  console.log("groupNumber", groupNumber);
+  console.log("equipment", equipment);
+  console.log("store.state.controles", controles.value);
+  const controle = controles.value.find(
+    (c) =>
+      c.id_categorie === designId &&
+      c.number_group === groupNumber &&
+      c.number_equip === equipment
+  );
 
-    // Calculate the date based on the selected month, year, and the column of the clicked cell
-    var column = cell.cellIndex; // Get the index of the column
-    column = column - 4;
-    console.log("column", column);
-
-    const weekSegment = Math.floor(column / 5); // Determine the week segment (0 for S1, 1 for S2, etc.)
-    console.log("weekSegment", weekSegment);
-    const dayIndex = column % 5; // Get the day index within the week segment
-    const baseDate = new Date(
-      selectedYear.value,
-      selectedMonth.value,
-      getDateForWeekday(
-        weekDays.value[dayIndex],
-        selectedMonth.value,
-        selectedYear.value
-      )
-    );
-    const cellDate = new Date(baseDate);
-    cellDate.setDate(baseDate.getDate() + weekSegment * 7); // Adjust the date based on the week segment
-
-    console.log("Date:", cellDate.toLocaleDateString());
+  if (controle) {
+    console.log(`ID du contrôle : ${controle.id}`);
+  } else {
+    console.log("Contrôle non trouvé");
   }
 };
 
@@ -492,8 +545,10 @@ const resetData = () => {
 
   localStorage.removeItem("weekDays");
   localStorage.removeItem("addedData");
+  localStorage.removeItem("selectedMonth");
+
   clearSelectedData();
-  selectedMonth.value = null;
+  //selectedMonth.value = null;
 
   // weekDays = [];
 };
@@ -515,6 +570,10 @@ onMounted(() => {
   const storedWeekDays = localStorage.getItem("weekDays");
   if (storedWeekDays) {
     weekDays.value = JSON.parse(storedWeekDays);
+  }
+  const storedMonth = localStorage.getItem("selectedMonth");
+  if (storedMonth) {
+    selectedMonth.value = JSON.parse(storedMonth);
   }
 });
 </script>
