@@ -14,6 +14,6 @@ class Groupe extends Model
     ];
     public function controles()
     {
-        return $this->hasMany(Controle::class, 'id_categorie');
+        return $this->hasMany(Controle::class, 'number_group');
     }
 }

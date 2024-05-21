@@ -266,13 +266,7 @@
                           :id="`cell-${index_designation}-${index_group}-${index_equipement}`"
                           class="border border-black py-1 px-2 cursor-pointer"
                         >
-                          {{
-                            design.id +
-                            " " +
-                            groupe.number_group +
-                            " " +
-                            equipement
-                          }}
+                          {{ date.date }}
                         </td>
                       </template>
                     </tr>
@@ -281,6 +275,14 @@
               </template>
             </tbody>
           </table>
+          <div class="mb-4 mt-4">
+            <button
+              class="bg-green-500 mr-4 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              @click="savePlanifications"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
       <br />
@@ -498,6 +500,7 @@ function getDateForWeekday(weekday, month, year) {
   return 1 + dayOffset;
 }
 store.dispatch("fetchControles");
+const selectedCells = []; // Array to store the selected cells
 
 const controles = computed(() => store.state.controles);
 const selectDate = (
@@ -531,11 +534,64 @@ const selectDate = (
       c.number_group === groupNumber &&
       c.number_equip === equipment
   );
-
+  console.log("# controle", controle.id);
   if (controle) {
-    console.log(`ID du contrôle : ${controle.id}`);
+    const cellData = {
+      controle_id: controle.id,
+      date: cellDate,
+    };
+    const existingIndex = selectedCells.findIndex(
+      (cell) => cell.controle_id === controle.id && cell.date === cellDate
+    );
+    if (existingIndex === -1) {
+      selectedCells.push(cellData);
+    } else {
+      selectedCells.splice(existingIndex, 1);
+    }
   } else {
     console.log("Contrôle non trouvé");
+  }
+  console.log("selectedCells ", selectedCells);
+};
+const savePlanifications = async () => {
+  try {
+    const accessToken = localStorage.getItem("access_token");
+
+    if (accessToken) {
+      const planificationsData = selectedCells.reduce((acc, cell) => {
+        const existingPlan = acc.find(
+          (plan) => plan.controle_id === cell.controle_id
+        );
+
+        if (existingPlan) {
+          existingPlan.dates.push(cell.date);
+        } else {
+          acc.push({
+            controle_id: cell.controle_id,
+            dates: [cell.date],
+          });
+        }
+
+        return acc;
+      }, []);
+
+      const response = await axios.post(
+        "http://localhost:8000/api/planification",
+        planificationsData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("response.data", response.data);
+      // Handle the response as needed
+    } else {
+      console.error("Access token not found in localStorage");
+      // Handle the case where the access token is not available
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 

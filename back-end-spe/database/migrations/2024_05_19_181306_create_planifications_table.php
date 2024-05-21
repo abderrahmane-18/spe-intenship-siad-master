@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('controle_id');
             $table->date('date');
-            $table->unique(['controle_id',  'date']);
+            $table->unique(['controle_id', 'date']);
             $table->foreign('controle_id')->references('id')->on('controles')->onDelete('cascade');
 
             $table->timestamps();
