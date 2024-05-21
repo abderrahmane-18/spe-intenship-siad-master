@@ -35,6 +35,8 @@ class ControleController extends Controller
     }
     public function getControlData()
     {
+
+
         $categories = Category::with('controles.groupe')->get();
 
         $data = $categories->map(function ($category) {

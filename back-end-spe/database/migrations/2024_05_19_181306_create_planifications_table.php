@@ -12,11 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('planifications', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('controle_id');
             $table->date('date');
-            $table->primary(['controle_id', 'date']);
+            $table->unique(['controle_id', 'date']);
+            $table->foreign('controle_id')->references('id')->on('controles')->onDelete('cascade');
+
             $table->timestamps();
-            $table->foreign('controle_id')->references('id')->on('controles');
         });
     }
 

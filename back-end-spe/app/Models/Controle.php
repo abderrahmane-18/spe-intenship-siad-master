@@ -22,4 +22,8 @@ class Controle extends Model
     {
         return $this->belongsTo(Groupe::class, 'number_group');
     }
+    public function planifications()
+    {
+        return $this->hasMany(Planification::class, 'controle_id');
+    }
 }
