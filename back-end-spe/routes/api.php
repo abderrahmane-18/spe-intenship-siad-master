@@ -58,6 +58,9 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::get('controle/data', [ControleController::class, "getControlData"]);
     Route::get('controle/data/{id}', [ControleController::class, "getControlDataById"]);
     Route::get('controles', [ControleController::class, 'index']);
+    Route::get('/planifications', [PlanificationController::class, 'getPlanificationsByMonthYear']);
+    Route::delete('/planifications', [PlanificationController::class, 'deleteAll']);
+    //  Route::get('/planifications', [PlanificationController::class, 'getPlanificationsByMonthYear']);
 
     // Route::get('categories', [CategoryController::class, "index"]);
 });

@@ -10,12 +10,33 @@ const store = createStore({
     allCategories: [],
     designations: [], 
     controles: [],
+    addedData: [],
+    selectedCells: [],
+    weekDays: [],
+    
+    selectedMonth: null,
+    selectedYear: new Date().getFullYear(),
 
    // groupeIds:[],
     lastFetchTime: null,
     fetchInterval: 30000, // Fetch interval in milliseconds (e.g., 30 seconds)
   },
   mutations: {
+    setAddedData(state, payload) {
+      state.addedData = payload;
+    },
+    setSelectedCells(state, payload) {
+      state.selectedCells = payload;
+    },
+    setWeekDays(state, payload) {
+      state.weekDays = payload;
+    },
+    setSelectedMonth(state, payload) {
+      state.selectedMonth = payload;
+    },
+    setSelectedYear(state, payload) {
+      state.selectedYear = payload;
+    },
     ADD_CONTROLE(state, controle) {
       state.controles.push(controle);
     },
@@ -69,6 +90,33 @@ const store = createStore({
    } ,
   },
   actions: {
+    savePlanifications({ state }) {
+      // API call to save the planifications
+      const planificationsData = state.selectedCells.reduce((acc, cell) => {
+        const existingPlan = acc.find(plan => plan.controle_id === cell.controle_id);
+
+        if (existingPlan) {
+          existingPlan.dates.push(cell.date);
+        } else {
+          acc.push({
+            controle_id: cell.controle_id,
+            dates: [cell.date],
+          });
+        }
+
+        return acc;
+      }, []);
+
+      axios.post('http://localhost:8000/api/planification', planificationsData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      }).then(response => {
+        console.log('response.data', response.data);
+      }).catch(error => {
+        console.error(error);
+      });
+    },
 
  
     async fetchPermissions({ commit }, roleId) {

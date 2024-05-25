@@ -265,9 +265,7 @@
                           "
                           :id="`cell-${index_designation}-${index_group}-${index_equipement}`"
                           class="border border-black py-1 px-2 cursor-pointer"
-                        >
-                          {{ date.date }}
-                        </td>
+                        ></td>
                       </template>
                     </tr>
                   </template>

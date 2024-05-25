@@ -1,20 +1,20 @@
-<script setup >
-import { useSidebarStore } from '@/stores/sidebar'
-import { onClickOutside } from '@vueuse/core'
-import { ref } from 'vue'
-import SidebarItem from './SidebarItem.vue'
+<script setup>
+import { useSidebarStore } from "@/stores/sidebar";
+import { onClickOutside } from "@vueuse/core";
+import { ref } from "vue";
+import SidebarItem from "./SidebarItem.vue";
 
-const target = ref(null)
+const target = ref(null);
 
-const sidebarStore = useSidebarStore()
+const sidebarStore = useSidebarStore();
 
 onClickOutside(target, () => {
-  sidebarStore.isSidebarOpen = false
-})
+  sidebarStore.isSidebarOpen = false;
+});
 
 const menuGroups = ref([
   {
-    name: 'MENU',
+    name: "MENU",
     menuItems: [
       {
         icon: `<svg
@@ -42,9 +42,9 @@ const menuGroups = ref([
                     fill=""
                   />
                 </svg>`,
-        label: 'Dashboard',
-        route: '#',
-        children: [{ label: 'eCommerce', route: '/' }]
+        label: "Dashboard",
+        route: "#",
+        children: [{ label: "eCommerce", route: "/" }],
       },
       {
         icon: `<svg
@@ -60,8 +60,8 @@ const menuGroups = ref([
                     fill=""
                   />
                 </svg>`,
-        label: 'Calendar',
-        route: '/calendar'
+        label: "Calendar",
+        route: "/calendar",
       },
       /*
       {
@@ -116,13 +116,14 @@ const menuGroups = ref([
                     fill="white"
                   />
                 </svg>`,
-        label: 'Planifications',
-        route: '#',
+        label: "Planifications",
+        route: "#",
         children: [
-          { label: 'Groupe', route: '/planifications/groupe' },
-          { label: 'Controles', route: '/planifications/controle' },
-          { label: 'Program', route: '/planifications/Program' },
-        ]
+          { label: "Groupe", route: "/planifications/groupe" },
+          { label: "Controles", route: "/planifications/controle" },
+          { label: "Program", route: "/planifications/Program" },
+          { label: "reports", route: "/planifications/reports" },
+        ],
       },
       {
         icon: `<svg
@@ -145,8 +146,8 @@ const menuGroups = ref([
                     </clipPath>
                   </defs>
                 </svg>`,
-        label: 'Controles',
-        route: '/controle'
+        label: "Controles",
+        route: "/controle",
       },
       {
         icon: `<svg
@@ -166,18 +167,18 @@ const menuGroups = ref([
                     fill=""
                   />
                 </svg>`,
-        label: 'Profile',
-        route: '#',
-        children: [{ label: 'Settings', route: '/profile/settings' },
-        { label: 'Permission', route: '/profile/permission' },
-     //   { label: 'Users', route: '/pages/users' },
-        
-      ]
-      }
-    ]
+        label: "Profile",
+        route: "#",
+        children: [
+          { label: "Settings", route: "/profile/settings" },
+          { label: "Permission", route: "/profile/permission" },
+          //   { label: 'Users', route: '/pages/users' },
+        ],
+      },
+    ],
   },
   {
-    name: 'OTHERS',
+    name: "OTHERS",
     menuItems: [
       {
         icon: `<svg
@@ -204,9 +205,9 @@ const menuGroups = ref([
                     </clipPath>
                   </defs>
                 </svg>`,
-        label: 'Charts',
-        route: '#',
-        children: [{ label: 'Basic Chart', route: '/charts/basic-chart' }]
+        label: "Charts",
+        route: "#",
+        children: [{ label: "Basic Chart", route: "/charts/basic-chart" }],
       },
       {
         icon: `<svg
@@ -237,12 +238,12 @@ const menuGroups = ref([
                     </clipPath>
                   </defs>
                 </svg>`,
-        label: 'UI Elements',
-        route: '#',
+        label: "UI Elements",
+        route: "#",
         children: [
-          { label: 'Alerts', route: '/ui-elements/alerts' },
-          { label: 'Buttons', route: '/ui-elements/buttons' }
-        ]
+          { label: "Alerts", route: "/ui-elements/alerts" },
+          { label: "Buttons", route: "/ui-elements/buttons" },
+        ],
       },
       {
         icon: `<svg
@@ -269,16 +270,16 @@ const menuGroups = ref([
                     </clipPath>
                   </defs>
                 </svg>`,
-        label: 'Authentication',
-        route: '#',
+        label: "Authentication",
+        route: "#",
         children: [
-          { label: 'Sign In', route: '/auth/signin' },
-          { label: 'Sign Up', route: '/auth/signup' }
-        ]
-      }
-    ]
-  }
-])
+          { label: "Sign In", route: "/auth/signin" },
+          { label: "Sign Up", route: "/auth/signup" },
+        ],
+      },
+    ],
+  },
+]);
 </script>
 
 <template>
@@ -286,19 +287,26 @@ const menuGroups = ref([
     class="absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0"
     :class="{
       'translate-x-0': sidebarStore.isSidebarOpen,
-      '-translate-x-full': !sidebarStore.isSidebarOpen
+      '-translate-x-full': !sidebarStore.isSidebarOpen,
     }"
     ref="target"
   >
     <!-- SIDEBAR HEADER -->
     <div class="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
       <div class="flex items-center">
-    <router-link to="/">
-      <img src="@/assets/images/logo/logo-spe.png" alt="Logo" class="h-8 w-auto" />
-    </router-link>
-    <span class="ml-3 text-lg font-semibold text-white">SPE-JIJEL</span>
-  </div>
-      <button class="block lg:hidden" @click="sidebarStore.isSidebarOpen = false">
+        <router-link to="/">
+          <img
+            src="@/assets/images/logo/logo-spe.png"
+            alt="Logo"
+            class="h-8 w-auto"
+          />
+        </router-link>
+        <span class="ml-3 text-lg font-semibold text-white">SPE-JIJEL</span>
+      </div>
+      <button
+        class="block lg:hidden"
+        @click="sidebarStore.isSidebarOpen = false"
+      >
         <svg
           class="fill-current"
           width="20"
@@ -316,21 +324,24 @@ const menuGroups = ref([
     </div>
     <!-- SIDEBAR HEADER -->
 
-    <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+    <div
+      class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear"
+    >
       <!-- Sidebar Menu -->
       <nav class="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
         <template v-for="menuGroup in menuGroups" :key="menuGroup.name">
           <div>
-            <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">{{ menuGroup.name }}</h3>
+            <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">
+              {{ menuGroup.name }}
+            </h3>
 
             <ul class="mb-6 flex flex-col gap-1.5">
               <SidebarItem
-        v-for="(menuItem, index) in menuGroup.menuItems"
-        :item="menuItem"
-        :key="index"
-        :index="index"
-        
-      />
+                v-for="(menuItem, index) in menuGroup.menuItems"
+                :item="menuItem"
+                :key="index"
+                :index="index"
+              />
             </ul>
           </div>
         </template>
@@ -338,7 +349,7 @@ const menuGroups = ref([
       <!-- Sidebar Menu -->
 
       <!-- Promo Box -->
-     
+
       <!-- Promo Box -->
     </div>
   </aside>
@@ -348,5 +359,4 @@ const menuGroups = ref([
   height: 2rem; /* Adjust as needed */
   width: auto;
 }
-
 </style>
