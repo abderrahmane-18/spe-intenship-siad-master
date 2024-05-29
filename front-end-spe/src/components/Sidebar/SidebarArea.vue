@@ -147,7 +147,14 @@ const menuGroups = ref([
                   </defs>
                 </svg>`,
         label: "Controles",
-        route: "/controle",
+
+        route: "#",
+        children: [
+          { label: "Categories", route: "/categories" },
+          { label: "Ralisation", route: "/controles/realize-control" },
+          { label: "Program", route: "/planifications/Program" },
+          { label: "reports", route: "/planifications/reports" },
+        ],
       },
       {
         icon: `<svg
