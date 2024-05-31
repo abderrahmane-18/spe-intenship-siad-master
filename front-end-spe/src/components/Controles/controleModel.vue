@@ -49,7 +49,7 @@
                   name="design"
                   id="design"
                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                  placeholder="Description"
+                  placeholder="frequence_rpm"
                   required
                 />
               </div>
@@ -71,18 +71,19 @@
               </div>
               <div class="col-span-full">
                 <label
-                  for="description"
+                  for="frequence_rpm"
                   class="text-sm font-medium text-gray-900 block mb-2"
-                  >Description</label
+                  >frequence_rpm</label
                 >
-                <textarea
-                  v-model="description"
+                <input
+                  type="number"
+                  v-model="frequence_rpm"
+                  name="desc"
                   id="description"
-                  rows="4"
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4"
                   placeholder="Description"
                   required
-                ></textarea>
+                />
               </div>
             </div>
             <!-- Modal footer -->
@@ -126,8 +127,8 @@ const props = defineProps({
     default: "",
   },
   initialDescription: {
-    type: String,
-    default: "",
+    type: Number,
+    default: null,
   },
   isUpdate: {
     type: Boolean,
@@ -142,14 +143,14 @@ const props = defineProps({
 const emit = defineEmits(["close", "save", "addCategory", "updateCategory"]);
 const design = ref(props.initialDesign);
 const codification = ref(props.initialCoding);
-const description = ref(props.initialDescription);
+const frequence_rpm = ref(props.initialDescription);
 const store = useStore();
 
 const handleSubmit = () => {
   const formData = {
     designation: design.value,
     codification: codification.value,
-    description: description.value,
+    frequence_rpm: frequence_rpm.value,
   };
   if (props.initialId) {
     // Update category
@@ -160,7 +161,7 @@ const handleSubmit = () => {
     emit("addCategory", formData);
     design.value = "";
     codification.value = "";
-    description.value = "";
+    frequence_rpm.value = null;
   }
   //
   // emit('addCategory', formData)

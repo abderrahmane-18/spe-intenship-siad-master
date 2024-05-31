@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('categoryequipements', 'categories');
+
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('designation');
-            $table->string('codification');
-            $table->text('description');
+            $table->char('codification');
+            $table->integer('frequence_rpm');
             $table->timestamps();
         });
     }

@@ -12,14 +12,14 @@ class CategoryController extends Controller
         $request->validate([
             'designation' => 'required|string|max:255',
             'codification' => 'required|string',
-            'description' => 'required|string',
+            'frequence_rpm' => 'required',
 
         ]);
 
         $category = Category::create([
             'designation' => $request->designation,
             'codification' => $request->codification,
-            'description' => $request->description
+            'frequence_rpm' => $request->frequence_rpm
 
         ]);
         return response()->json([
@@ -73,13 +73,13 @@ class CategoryController extends Controller
         $request->validate([
             'designation' => 'required|string|max:255',
             'codification' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'required',
 
         ]);
         $data = [
             'designation' => $request->designation,
             'codification' => $request->codification,
-            'description' => $request->description,
+            'frequence_rpm' => $request->frequence_rpm,
         ];
         $category->update($data);
         $result = array('status' => true, 'message' => 'category hase been updated succefully', 'data' => $category);

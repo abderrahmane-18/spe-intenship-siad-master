@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('planifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('controle_id');
-            $table->date('date');
-            $table->unique(['controle_id', 'date']);
+            $table->date('date_planified');
+            $table->date('date_planned');
+            $table->date('date_realized');
+            $table->unique(['controle_id', 'date_planned']);
             $table->foreign('controle_id')->references('id')->on('controles')->onDelete('cascade');
 
             $table->timestamps();

@@ -68,7 +68,7 @@ const store = createStore({
       }
     },
     ADD_CATEGORY(state, category) {
-      state.categories.push(category)
+      state.categories.data.push(category)
     },
     UPDATE_CATEGORY(state, updatedCategory) {
       const index = state.categories.findIndex(category => category.id === updatedCategory.id)

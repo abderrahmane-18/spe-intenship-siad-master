@@ -8,6 +8,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class UserRolePermissionSeeder extends Seeder
 {
@@ -59,35 +61,40 @@ class UserRolePermissionSeeder extends Seeder
         // Let's Create User and assign Role to it.
 
         $superAdminUser = User::firstOrCreate([
-                    'email' => 'superadmin@gmail.com',
-                ], [
-                    'name' => 'Super Admin abderrahmane',
-                    'email' => 'superadmin@gmail.com',
-                    'password' => Hash::make ('12345678'),
-                    
-                ]);
+            'email' => 'superadmin@gmail.com',
+        ], [
+            'name' => 'Super Admin abderrahmane',
+            'email' => 'superadmin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'email_verified_at' => Carbon::now(),
+            'remember_token' => Str::random(10),
+        ]);
 
         $superAdminUser->assignRole($superAdminRole);
 
 
         $adminUser = User::firstOrCreate([
-                            'email' => 'admin@gmail.com'
-                        ], [
-                            'name' => 'Admin',
-                            'email' => 'admin@gmail.com',
-                            'password' => Hash::make ('12345678'),
-                        ]);
+            'email' => 'admin@gmail.com'
+        ], [
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'email_verified_at' => Carbon::now(),
+            'remember_token' => Str::random(10),
+        ]);
 
         $adminUser->assignRole($adminRole);
 
 
         $staffUser = User::firstOrCreate([
-                            'email' => 'staff@gmail.com',
-                        ], [
-                            'name' => 'Staff',
-                            'email' => 'staff@gmail.com',
-                            'password' => Hash::make('12345678'),
-                        ]);
+            'email' => 'staff@gmail.com',
+        ], [
+            'name' => 'Staff',
+            'email' => 'staff@gmail.com',
+            'password' => Hash::make('12345678'),
+            'email_verified_at' => Carbon::now(),
+            'remember_token' => Str::random(10),
+        ]);
 
         $staffUser->assignRole($staffRole);
     }
