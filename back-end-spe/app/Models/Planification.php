@@ -10,10 +10,10 @@ class Planification extends Model
     use HasFactory;
     protected $fillable = [
         'controle_id',
-        'date'
+        'date_planified'
     ];
     protected $casts = [
-        'date' => 'date',
+        'date_planified' => 'date',
     ];
     public function controle()
     {

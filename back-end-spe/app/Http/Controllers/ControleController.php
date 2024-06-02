@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Controle;
 use App\Models\Groupe;
+use App\Models\Planification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ControleController extends Controller
@@ -100,5 +102,40 @@ class ControleController extends Controller
         ];
 
         return response()->json([$data]);
+    }
+    public function getControlDataForParameters()
+    {
+        $categories = Category::with('controles.groupe')->get();
+
+        $data = $categories->map(function ($category) {
+            $groups = [];
+
+            $category->controles->groupBy('groupe.id')->each(function ($controles, $groupId) use (&$groups) {
+                if ($groupId === '' || $groupId === null) {
+                    $equipments = $controles->pluck('number_equip')->toArray();
+
+                    $groups[] = [
+                        'number_group' => null,
+                        'equipments' => array_values(array_unique($equipments)),
+                    ];
+                } else {
+                    $group = Groupe::findOrNew($groupId);
+                    $equipments = $controles->pluck('number_equip')->toArray();
+
+                    $groups[] = [
+                        'number_group' => $group->id,
+                        'equipments' => array_values(array_unique($equipments)),
+                    ];
+                }
+            });
+
+            return [
+                'id' => $category->id,
+                'designation' => $category->designation,
+                'groups' => $groups,
+            ];
+        });
+
+        return response()->json($data);
     }
 }

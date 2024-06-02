@@ -12,7 +12,7 @@ class GroupeController extends Controller
         $groupe = Groupe::get();
         return response()->json([
             'success' => true,
-            'categories' =>  $groupe,
+            'groupes' =>  $groupe,
         ]);
     }
     public function store(Request $request)
