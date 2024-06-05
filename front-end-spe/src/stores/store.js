@@ -317,13 +317,13 @@ async updateCategory({ commit }, categoryData) {
         });
     
         // Extract the categories array from the response
-        const { categories } = response.data;
+        const { groupes } = response.data;
     
         // Commit the categories array to the Vuex state
-        commit('SET_GROUPES', categories);
+        commit('SET_GROUPES', groupes);
     
         // Map the categories to extract groupeIds
-        const groupeIds = categories.map(category => category.id);
+        const groupeIds = groupes.map(groupe => groupe.id);
         commit('SET_GROUPE_IDS', groupeIds);
       } catch (error) {
         console.error('Error fetching groupes:', error);
