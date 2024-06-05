@@ -152,9 +152,13 @@ const handleSubmit = () => {
     codification: codification.value,
     frequence_rpm: frequence_rpm.value,
   };
-  if (props.initialId) {
-    // Update category
 
+  if (typeof props.initialId === "number" && !isNaN(props.initialId)) {
+    formData.id = props.initialId;
+  }
+
+  if (formData.id) {
+    // Update category
     emit("updateCategory", formData);
   } else {
     // Add category
@@ -163,7 +167,5 @@ const handleSubmit = () => {
     codification.value = "";
     frequence_rpm.value = null;
   }
-  //
-  // emit('addCategory', formData)
 };
 </script>

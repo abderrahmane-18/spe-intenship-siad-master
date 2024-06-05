@@ -1,4 +1,5 @@
 /* index.js route*/
+import store from '@/stores/store';
 import { createRouter, createWebHistory } from 'vue-router';
 import Permission from '@/views/Pages/Permission.vue'
 import Login from '../views/Login.vue';
@@ -19,7 +20,7 @@ import Role from '@/views/Pages/Role.vue'; // import Roles
 import User from '@/views/Pages/User.vue'; // import Users 
 
 const routes = [ { path: '/', name: 'Login', component: Login, }, 
-{ path: '/dashboard', name: 'Dashboard', component: Dashboard, }, 
+{ path: '/dashboard', name: 'Dashboard', component: Dashboard, meta:{requiresAuth: true, permission: 'view role' }}, 
 
 { path: '/admin', name: 'Admin', component: () => import('../views/Admin.vue'), },
 { path: '/categories/add-category', name: 'addCategory', component: addCategory, meta: { title: 'addCategory' }},
@@ -35,8 +36,31 @@ const routes = [ { path: '/', name: 'Login', component: Login, },
 { path: '/profile/roles', name: 'roles', component: Role, meta: { title: 'Role' } }, // Route for Roles component
 { path: '/profile/roles/create', name: 'rolesCreate', component: createRole, meta: { title: 'createRole' } }, // Route for Roles component
 { path: '/profile/roles/add-permission/:roleId', name: 'addPermissionRole', component: addPermissionRole, meta: { title: 'addPermissionRole' } }, // Route for Roles component
-{ path: '/profile/roles/edit-user/:roleId', name: 'editUser', component: editUser, meta: { title: 'editUser' } }, // Route for Roles component
-
-  { path: '/profile/users', name: 'users', component: User, meta: { title: 'User' } },
+{ path: '/profile/roles/edit-user/:id_user', name: 'editUser', component: editUser, meta: { title: 'editUser' } }, // Route for Roles component
+{
+  path: '/profile/users',
+  name: 'users',
+  component: User,
+  meta: {
+    title: 'User',
+   // requiresAuth: true,
+    //allowedRoles: ['super-admin'] // Only super-admin can access this route
+  }
+},
+{ path: '/unauthorized', name: 'Unauthorized', component: () => import('@/views/Unauthorized.vue') },
  { path: '/profile/settings', name: 'settings', component: SettingsView, meta: { title: 'Settings' } }, ]; 
- const router = createRouter({ history: createWebHistory(), routes, }); router.beforeEach((to, from, next) => { if (to.name === 'Dashboard') { const isAuthenticated = localStorage.getItem('access_token'); if (!isAuthenticated) { next('/'); } else { next(); } } else { next(); } }); export default router;
+ const router = createRouter({ history: createWebHistory(), routes, }); 
+ 
+ router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('access_token');
+  const userPermissions = store.getters.getUserPermissions;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/');
+  } else if (to.meta.permission && !userPermissions.includes(to.meta.permission)) {
+    next('/unauthorized');
+  } else {
+    next();
+  }
+});
+export default router;

@@ -24,8 +24,7 @@ class PermissionController extends Controller implements HasMiddleware
     public function index()
     {
         $permissions = Permission::get();
-        return response()->json($permissions, 200);
-        // return view('role-permission.permission.index', ['permissions' => $permissions]);
+        return view('role-permission.permission.index', ['permissions' => $permissions]);
     }
 
     public function create()

@@ -13,7 +13,16 @@ const store = createStore({
     addedData: [],
     selectedCells: [],
     weekDays: [],
-    
+    //user: null,
+    cachedRoles: [],
+    //cachedRoles: [],
+
+
+    user: null,
+    roles: [],
+    permissions: [],
+
+
     selectedMonth: null,
     selectedYear: new Date().getFullYear(),
 
@@ -25,6 +34,7 @@ const store = createStore({
     setAddedData(state, payload) {
       state.addedData = payload;
     },
+    
     setSelectedCells(state, payload) {
       state.selectedCells = payload;
     },
@@ -34,14 +44,19 @@ const store = createStore({
     setSelectedMonth(state, payload) {
       state.selectedMonth = payload;
     },
+    SET_USER_DATA(state, userData) {
+      state.user = userData;
+      state.roles = userData.roles;
+      state.permissions = userData.permissions;
+    },
     setSelectedYear(state, payload) {
       state.selectedYear = payload;
     },
     ADD_CONTROLE(state, controle) {
       state.controles.push(controle);
     },
-    SET_CACHED_PERMISSIONS(state, payload) {
-      state.cachedPermissions[payload.roleId] = payload.data
+    SET_CACHED_PERMISSIONS(state, { roleId, data }) {
+      state.cachedPermissions[roleId] = data;
     },
     SET_DESIGNATIONS(state, designations) {
       state.designations = designations;
@@ -67,13 +82,18 @@ const store = createStore({
         state.users.splice(index, 1, updatedUser)
       }
     },
-    ADD_CATEGORY(state, category) {
-      state.categories.data.push(category)
+    SET_CACHED_ROLES(state, roles) {
+      state.cachedRoles = roles;
     },
+  
+    ADD_CATEGORY(state, category) {
+      state.categories.push(category)
+    },
+    
     UPDATE_CATEGORY(state, updatedCategory) {
-      const index = state.categories.findIndex(category => category.id === updatedCategory.id)
+      const index = state.categories.data.findIndex(category => category.id === updatedCategory.id)
       if (index !== -1) {
-        state.categories.splice(index, 1, updatedCategory)
+        state.categories.data.splice(index, 1, updatedCategory)
       }
     },
     DELETE_CATEGORY(state, categoryId) {
@@ -88,6 +108,21 @@ const store = createStore({
    SET_CONTROLES (state, controles){
     (state.controles = controles)
    } ,
+   SET_USER(state, user) {
+    state.user = user;
+
+  },
+  SET_CACHED_USER(state, user) {
+    state.cachedUser = user;
+  },
+  
+  SET_ROLES(state, roles) {
+    state.roles = roles;
+
+  },
+  CLEAR_CACHED_ROLES(state) {
+    state.cachedRoles = [];
+  },
   },
   actions: {
     savePlanifications({ state }) {
@@ -117,29 +152,82 @@ const store = createStore({
         console.error(error);
       });
     },
+    async givePermissionToRole({ commit, dispatch }, { roleId, permissions }) {
+      try {
+        const response = await axios.put(`http://localhost:8000/api/roles/${roleId}/give-permissions`, { permission: permissions }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+        commit('SET_CACHED_PERMISSIONS', { roleId, data: response.data.data });
+        await dispatch('fetchPermissions', roleId); // Fetch the updated permissions
+      } catch (error) {
+        console.error('Error updating role permissions:', error);
+      }
+    },
+    async login({ commit }, credentials) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/login', credentials);
+        localStorage.setItem('access_token', response.data.access_token);
+        commit('SET_USER_DATA', response.data);
+      } catch (error) {
+        console.error('Error logging in:', error);
+      }
+    },
+    async fetchUser({ state }, userId) {
+      try {
+        const user = state.users.find(user => user.id === parseInt(userId));
+        if (user) return user;
+        const response = await axios.get(`http://localhost:8000/api/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+        return response.data.user;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    },
+    async fetchRoles({ commit, state }) {
+      try {
+        if (state.cachedRoles.length > 0) {
+          return state.cachedRoles;
+        }
+        const response = await axios.get('http://localhost:8000/api/roles', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+        const roles = response.data.roles.map(role => role.name);
+        commit('SET_ROLES', roles);
+        commit('SET_CACHED_ROLES', roles);
+        return roles;
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
+    },
 
- 
     async fetchPermissions({ commit }, roleId) {
-      const cachedData = this.state.cachedPermissions[roleId]
+      const cachedData = this.state.cachedPermissions[roleId];
       if (cachedData) {
-        return cachedData
+        return cachedData;
       }
       try {
         const permissionsResponse = await axios.get(`http://localhost:8000/api/roles/${roleId}/give-permissions`, {
           headers: {
             Authorization: 'Bearer ' + localStorage.getItem('access_token'),
           },
-        })
-        const permissionsData = permissionsResponse.data
+        });
+        const permissionsData = permissionsResponse.data;
         const data = {
-          role: permissionsData.role,
-          permissions: permissionsData.permissions,
-          rolePermissions: permissionsData.rolePermissions,
-        }
-        commit('SET_CACHED_PERMISSIONS', { roleId, data })
-        return data
+          role: permissionsData.role || {},
+          permissions: permissionsData.permissions || [],
+          rolePermissions: permissionsData.rolePermissions || {},
+        };
+        commit('SET_CACHED_PERMISSIONS', { roleId, data });
+        return data;
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     },
     async fetchUsers({ commit }) {
@@ -162,20 +250,14 @@ const store = createStore({
     },
     async updateUser({ commit }, userData) {
       try {
-        const response = await axios.put(`http://localhost:8000/api/users/${userData.id}`, {
-          name: userData.name,
-          email: userData.email,
-          roles: [userData.level],
-        }, {
+        const response = await axios.put(`http://localhost:8000/api/users/${userData.id}`, userData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
-        })
-        const updatedUser = response.data.data
-        commit('UPDATE_USER', updatedUser)
-        return updatedUser
+        });
+        return response.data.user;
       } catch (error) {
-        console.error(error)
+        console.error('Error updating user:', error);
       }
     },
 
@@ -194,19 +276,24 @@ const store = createStore({
         console.error('Error adding category:', error)
       }
      },
-     async updateCategory({ commit }, categoryData) {
-      try {
-        const response = await axios.put(`http://localhost:8000/api/update-category/${categoryData.id}`, categoryData, {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-          },
-        })
-        const updatedCategory = response.data.data
-        commit('UPDATE_CATEGORY', updatedCategory)
-      } catch (error) {
-        console.error('Error updating category:', error)
-      }
-    },
+async updateCategory({ commit }, categoryData) {
+  try {
+    if (!categoryData.id) {
+      console.error('Category ID is missing or undefined');
+      return;
+    }
+
+    const response = await axios.put(`http://localhost:8000/api/update-category/${categoryData.id}`, categoryData, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+      },
+    });
+    const updatedCategory = response.data.data;
+    commit('UPDATE_CATEGORY', updatedCategory);
+  } catch (error) {
+    console.error('Error updating category:', error);
+  }
+},
     async deleteCategory({ commit }, categoryId) {
       try {
         await axios.delete(`http://localhost:8000/api/categories/delete/${categoryId}`, {
@@ -313,6 +400,15 @@ const store = createStore({
   },getters: {
     getCategories(state) {
       return state.allCategories;
+    },
+    getUser(state){
+      return state.user;
+    },
+    getUserRoles(state){
+      return state.roles;
+    },
+    getUserPermissions(state){
+      return state.permissions;
     },
   },
 
