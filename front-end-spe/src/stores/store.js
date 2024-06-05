@@ -21,7 +21,7 @@ const store = createStore({
     user: null,
     roles: [],
     permissions: [],
-
+data:[],
 
     selectedMonth: null,
     selectedYear: new Date().getFullYear(),
@@ -87,7 +87,7 @@ const store = createStore({
     },
   
     ADD_CATEGORY(state, category) {
-      state.categories.push(category)
+      state.categories.data.push(category)
     },
     
     UPDATE_CATEGORY(state, updatedCategory) {
@@ -97,7 +97,9 @@ const store = createStore({
       }
     },
     DELETE_CATEGORY(state, categoryId) {
-      state.categories = state.categories.filter(category => category.id !== categoryId)
+      if (Array.isArray(state.categories.data)) {
+        state.categories.data = state.categories.data.filter(category => category.id !== categoryId);
+      }
     },
     SET_GROUPES(state, groupes) {
       state.groupes = groupes;

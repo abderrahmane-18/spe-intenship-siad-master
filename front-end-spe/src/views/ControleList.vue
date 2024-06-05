@@ -85,14 +85,11 @@ const openDeleteModal = (category) => {
 
 const deleteCategory = async (category) => {
   try {
-    // Remove the category from the local categories array
-    categories.value = categories.value.filter((c) => c.id !== category.id);
-
     // Dispatch the deleteCategory action to the Vuex store
     await store.dispatch("deleteCategory", category.id);
     console.log("yt");
-    // Close the delete modal
 
+    // Close the delete modal
     showDeleteModal.value = false;
   } catch (error) {
     console.error("Error deleting category:", error);
