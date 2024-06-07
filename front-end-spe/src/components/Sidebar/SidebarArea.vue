@@ -91,8 +91,13 @@ const menuGroups = ref([
                     fill=""
                   />
                 </svg>`,
-        label: "Calendar",
-        route: "/calendar",
+        label: "Realization",
+        route: "#",
+        children: [
+          { label: "Equipment", route: "/Realization/equipment" },
+
+          //   { label: 'Users', route: '/pages/users' },
+        ],
       },
       /*
       {
