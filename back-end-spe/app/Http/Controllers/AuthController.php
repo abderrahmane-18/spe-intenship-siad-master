@@ -33,16 +33,21 @@ class AuthController extends Controller
 
         if (!Auth::attempt($validated)) {
             return response()->json([
-                'message' => 'invalid information',
+                'message' => 'Invalid information',
             ], 401);
         }
 
         $user = User::where('email', $validated['email'])->first();
+        $roles = $user->roles->pluck('id', 'name');
+        $permissions = $user->getAllPermissions()->pluck('name');
+
         return response()->json([
             'access_token' => $user->createToken('api_token')->plainTextToken,
             'token_type' => 'Bearer',
             'name' => $user->name,
             'id' => $user->id,
+            'roles' => $roles,
+            'permissions' => $permissions,
         ]);
     }
 

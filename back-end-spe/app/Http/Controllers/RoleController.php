@@ -98,7 +98,6 @@ class RoleController extends Controller implements HasMiddleware
         $role->delete();
         return redirect('roles')->with('status', 'Role Deleted Successfully');
     }
-
     public function addPermissionToRole($roleId)
     {
         $permissions = Permission::get();
@@ -122,7 +121,16 @@ class RoleController extends Controller implements HasMiddleware
 
         $role = Role::findOrFail($roleId);
         $role->syncPermissions($request->permission);
+        $result = [
+            'status' => true,
+            'message' => 'Category has been updated successfully',
+            'data' => $role,
+        ];
 
-        return redirect()->back()->with('status', 'Permissions added to role');
+        return response()->json($result, 200);
+
+
+
+        // return redirect()->back()->with('status', 'Permissions added to role');
     }
 }

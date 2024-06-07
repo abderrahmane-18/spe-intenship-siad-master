@@ -4,8 +4,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ControleController;
 use App\Http\Controllers\GroupeController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PlanificationController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Models\Controle;
 use App\Models\Planification;
 use Illuminate\Http\Request;
@@ -34,7 +36,11 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
 
     Route::get('roles', [RoleController::class, "index"]);
     Route::get('roles/{id}', [RoleController::class, "showRole"]);
-    Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+    //Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+    Route::put('permission/{permissionId}', [PermissionController::class, 'update']);
+    Route::post('permission', [PermissionController::class, 'store']);
+    Route::get('permissions', [App\Http\Controllers\PermissionController::class, 'index']);
+
     Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermissionController::class, 'destroy']);
 
     Route::get('roles/{roleId}/delete', [App\Http\Controllers\RoleController::class, 'destroy']);
@@ -43,6 +49,9 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
 
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::patch('users/{id}', [App\Http\Controllers\UserController::class]);
+
+    Route::get('user/role/{id}', [UserController::class, 'getUserWithById']);
+
     Route::get('categories/search/{designation}', [App\Http\Controllers\CategoryController::class, 'search']);
 
     Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);

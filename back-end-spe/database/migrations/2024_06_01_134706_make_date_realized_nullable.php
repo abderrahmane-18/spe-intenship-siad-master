@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::table('planifications', function (Blueprint $table) {
+            $table->date('date_realized')->nullable()->change();
+        });
     }
 
     /**
@@ -19,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('planifications', function (Blueprint $table) {
+            //
+        });
     }
 };

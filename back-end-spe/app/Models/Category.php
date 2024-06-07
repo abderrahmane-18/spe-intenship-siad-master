@@ -11,7 +11,7 @@ class Category extends Model
     protected $fillable = [
         'designation',
         'codification',
-        'description',
+        'frequence_rpm',
     ];
     public function controles()
     {

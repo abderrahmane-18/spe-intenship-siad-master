@@ -1,17 +1,48 @@
 <script setup>
 import { useSidebarStore } from "@/stores/sidebar";
 import { onClickOutside } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import SidebarItem from "./SidebarItem.vue";
+import { useStore } from "vuex";
 
 const target = ref(null);
+const store = useStore();
 
 const sidebarStore = useSidebarStore();
-
+let permissions;
+try {
+  permissions = JSON.parse(localStorage.getItem("permissions") || "[]");
+  console.log("chekfa", permissions);
+} catch (e) {
+  console.error("Failed to parse permissions from localStorage:", e);
+  permissions = [];
+}
+const hasPermission = (requiredPermissions) => {
+  return requiredPermissions.every((permission) =>
+    permissions.includes(permission)
+  );
+};
 onClickOutside(target, () => {
   sidebarStore.isSidebarOpen = false;
 });
-
+const filteredMenuGroups = computed(() => {
+  return menuGroups.value.map((group) => {
+    return {
+      ...group,
+      menuItems: group.menuItems.map((item) => {
+        if (item.children) {
+          return {
+            ...item,
+            children: item.children.filter(
+              (child) => !child.permissions || hasPermission(child.permissions)
+            ),
+          };
+        }
+        return item;
+      }),
+    };
+  });
+});
 const menuGroups = ref([
   {
     name: "MENU",
@@ -121,7 +152,11 @@ const menuGroups = ref([
         children: [
           { label: "Groupe", route: "/planifications/groupe" },
           { label: "Controles", route: "/planifications/controle" },
-          { label: "Program", route: "/planifications/Program" },
+          {
+            label: "Program",
+            route: "/planifications/Program",
+            permissions: ["view planification"],
+          },
           { label: "reports", route: "/planifications/reports" },
         ],
       },
@@ -178,7 +213,7 @@ const menuGroups = ref([
         route: "#",
         children: [
           { label: "Settings", route: "/profile/settings" },
-          { label: "Permission", route: "/profile/permission" },
+          { label: "Permission", route: "/profile/permissions" },
           //   { label: 'Users', route: '/pages/users' },
         ],
       },
@@ -336,7 +371,7 @@ const menuGroups = ref([
     >
       <!-- Sidebar Menu -->
       <nav class="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-        <template v-for="menuGroup in menuGroups" :key="menuGroup.name">
+        <template v-for="menuGroup in filteredMenuGroups" :key="menuGroup.name">
           <div>
             <h3 class="mb-4 ml-4 text-sm font-medium text-bodydark2">
               {{ menuGroup.name }}

@@ -296,6 +296,7 @@ import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 const store = useStore();
+
 const controlData = ref([]);
 const selectedControlDesignId = ref(null);
 function groupLength(design) {

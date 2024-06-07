@@ -85,14 +85,11 @@ const openDeleteModal = (category) => {
 
 const deleteCategory = async (category) => {
   try {
-    // Remove the category from the local categories array
-    categories.value = categories.value.filter((c) => c.id !== category.id);
-
     // Dispatch the deleteCategory action to the Vuex store
     await store.dispatch("deleteCategory", category.id);
     console.log("yt");
-    // Close the delete modal
 
+    // Close the delete modal
     showDeleteModal.value = false;
   } catch (error) {
     console.error("Error deleting category:", error);
@@ -214,7 +211,7 @@ const goToPreviousPage = () => {
                       scope="col"
                       class="w-1/6 p-4 text-left text-xs font-medium text-gray-500 uppercase border-r border-black"
                     >
-                      frequency
+                      frequence_rpm
                     </th>
                     <th
                       scope="col"
@@ -245,7 +242,7 @@ const goToPreviousPage = () => {
                     <td
                       class="p-4 whitespace-nowrap text-base font-medium text-gray-900 border-r border-black"
                     >
-                      {{ category.frequency_RPM }}
+                      {{ category.frequence_rpm }}
                     </td>
                     <td
                       class="p-4 whitespace-nowrap space-x-2 border-l border-r border-black"
@@ -294,14 +291,14 @@ const goToPreviousPage = () => {
                   </tr>
                 </tbody>
               </table>
-              <controleModel
+           <controleModel
                 v-if="showEditModal"
                 :showModal="showEditModal"
                 modalTitle="Edit category"
                 modalButtonText="Save changes"
                 :initialDesign="editingCategory.designation"
                 :initialCoding="editingCategory.codification"
-                :initialDescription="editingCategory.description"
+                :initialDescription="editingCategory.frequence_rpm"
                 @close="showEditModal = false"
                 :initialId="editingCategory.id"
                 @updateCategory="updateCategory"

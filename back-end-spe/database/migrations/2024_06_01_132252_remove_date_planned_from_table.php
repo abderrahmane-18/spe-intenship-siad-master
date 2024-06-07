@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('level',['user','admin','staf'])->default('admin');
-
+        Schema::table('planifications', function (Blueprint $table) {
+            $table->dropColumn('date_planned');
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('planifications', function (Blueprint $table) {
             //
         });
     }

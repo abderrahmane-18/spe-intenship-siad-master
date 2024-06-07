@@ -15,7 +15,7 @@ class UserController extends Controller implements HasMiddleware
     {
         return [
             new Middleware(middleware: ('permission:view user'), only: ['index']),
-            new Middleware(middleware: ('permission:create use role'), only: ['create', 'store']),
+            new Middleware(middleware: ('permission:create user'), only: ['create', 'store']),
             new Middleware(middleware: ('permission:update user'), only: ['update', 'edit']),
             new Middleware(middleware: ('permission:delete user'), only: ['destroy']),
 
@@ -120,6 +120,22 @@ class UserController extends Controller implements HasMiddleware
         $result = array('status' => true, 'message' => 'user hase been updated succefully', 'data' => $user);
         return response()->json($result, 200);
         //return redirect('/users')->with('status', 'User Updated Successfully with roles');
+    }
+    public function getUserWithById($id)
+    {
+        // Fetch the user by ID with their roles
+        $user = User::with('roles')->find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        // Map user data with role names
+        $userWithRoleNames = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'roles' => $user->roles->pluck('name'),
+        ];
+        return response()->json(['user' => $userWithRoleNames]);
     }
 
     public function destroy($userId)

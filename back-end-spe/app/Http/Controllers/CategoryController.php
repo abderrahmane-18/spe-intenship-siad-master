@@ -12,14 +12,16 @@ class CategoryController extends Controller
         $request->validate([
             'designation' => 'required|string|max:255',
             'codification' => 'required|string',
-            'frequency_RPM' => 'required|string',
+
+            'frequence_rpm' => 'required',
 
         ]);
 
         $category = Category::create([
             'designation' => $request->designation,
             'codification' => $request->codification,
-            'frequency_RPM' => $request->description
+            'frequence_rpm' => $request->frequence_rpm
+
 
         ]);
         return response()->json([
@@ -68,21 +70,41 @@ class CategoryController extends Controller
     }
     public function update(Request $request, $id)
     {
-
         $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Category not found',
+            ], 404);
+        }
+
         $request->validate([
             'designation' => 'required|string|max:255',
             'codification' => 'required|string',
-            'frequency_RPM' => 'required|string',
+            'frequence_rpm' => 'required',
+
+         
+
 
         ]);
+
         $data = [
             'designation' => $request->designation,
             'codification' => $request->codification,
-            'frequency_RPM' => $request->description,
+
+            'frequence_rpm' => $request->frequence_rpm,
+
         ];
+
         $category->update($data);
-        $result = array('status' => true, 'message' => 'category hase been updated succefully', 'data' => $category);
+
+        $result = [
+            'status' => true,
+            'message' => 'Category has been updated successfully',
+            'data' => $category,
+        ];
+
         return response()->json($result, 200);
     }
     public function destroy($id)
