@@ -7,7 +7,7 @@
       >Roles</router-link
     >
     <router-link
-      to="/profile/permission"
+      to="/profile/permissions"
       class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mx-1"
       >Permissions</router-link
     >

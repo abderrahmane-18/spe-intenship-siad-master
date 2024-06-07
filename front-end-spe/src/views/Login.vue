@@ -1,4 +1,3 @@
-<!--Login.vue-->
 <template>
   <div class="login-view">
     <div
@@ -58,6 +57,8 @@
               />
             </div>
           </div>
+          <div></div>
+
           <div>
             <button
               type="submit"
@@ -65,28 +66,11 @@
               :disabled="isLoading"
             >
               <span v-if="!isLoading">Sign in</span>
-              <span v-else>
-                <svg
-                  class="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z"
-                  ></path>
-                </svg>
-              </span>
+              <div v-else class="flex items-center justify-center">
+                <div class="spinner"></div>
+                <!-- Add your spinner styles here -->
+                <span class="ml-2">Loading...</span>
+              </div>
             </button>
           </div>
         </form>
@@ -104,15 +88,24 @@ const email = ref("");
 const password = ref("");
 const store = useStore();
 const router = useRouter();
+const isLoading = ref(false);
 
 async function login() {
-  await store.dispatch("login", {
-    email: email.value,
-    password: password.value,
-  });
-  router.push({ name: "Dashboard" });
+  isLoading.value = true;
+  try {
+    await store.dispatch("login", {
+      email: email.value,
+      password: password.value,
+    });
+    router.push({ name: "Dashboard" });
+  } catch (error) {
+    console.error("Error logging in:", error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
+
 <style>
 .login-view {
   background-size: cover;
@@ -122,5 +115,23 @@ async function login() {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

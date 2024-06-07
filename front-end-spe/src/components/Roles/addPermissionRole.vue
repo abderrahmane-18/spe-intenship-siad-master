@@ -1,13 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
 import Dashboard from "@/views/Dashboard.vue";
 
 const route = useRoute();
-const router = useRouter();
 const store = useStore();
 const toast = useToast();
 const roleId = ref(null);
@@ -39,12 +38,12 @@ const updateRolePermissions = async () => {
       roleId: roleId.value,
       permissions: rolePermissions.value,
     });
-    await store.dispatch("fetchPermissions", roleId.value); // Fetch the updated permissions
+    // Fetch the updated permissions
+    await fetchData();
     toast.success("Permissions updated successfully", {
       timeout: 2000,
       hideProgressBar: true,
     });
-    router.push("/profile/roles"); // Navigate back to RolesList.vue page
   } catch (error) {
     console.error(error);
     toast.error("Failed to update permissions", {

@@ -1,15 +1,29 @@
+<!-- PermissionList.vue -->
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
 const store = useStore();
 const router = useRouter();
+
+const permissions = computed(() => store.getters.permissionsuser);
+onMounted(() => {
+  console.log("permissions", store.getters.permissionsuser);
+  store.dispatch("fetchPermissionsUSER");
+});
+const addPermission = () => {
+  router.push("/add-permission");
+};
+
+const deletePermission = async (id) => {
+  if (confirm("Are you sure you want to delete this permission?")) {
+    await store.dispatch("deletePermission", id);
+  }
+};
 </script>
 
 <template>
-  <head> </head>
-
   <div class="container mt-5 flex">
     <router-link
       to="/profile/roles"
@@ -17,7 +31,7 @@ const router = useRouter();
       >Roles</router-link
     >
     <router-link
-      to="/profile/permission"
+      to="/profile/permissions"
       class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mx-1"
       >Permissions</router-link
     >
@@ -35,10 +49,11 @@ const router = useRouter();
           <div class="flex justify-between items-center px-4 py-3 bg-gray-200">
             <h4 class="m-0 font-bold">Permissions</h4>
 
-            <a
-              href="#"
+            <router-link
+              to="/profile/permissions/add-permission"
               class="bg-cyan-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >Add Permission</a
+            >
+              Add Permission</router-link
             >
           </div>
           <div class="p-4">
@@ -51,20 +66,19 @@ const router = useRouter();
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="border px-4 py-2"></td>
-                  <td class="border px-4 py-2"></td>
+                <tr v-for="permission in permissions" :key="permission.id">
+                  <td class="border px-4 py-2">{{ permission.id }}</td>
+                  <td class="border px-4 py-2">{{ permission.name }}</td>
                   <td class="border px-4 py-2 flex">
-                    <a
-                      href="#"
-                      class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                      >Edit</a
+                    <router-link
+                      :to="{
+                        name: 'EditPermission',
+                        params: { id_permission: permission.id },
+                      }"
+                      class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
                     >
-                    <a
-                      href="#"
-                      class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-                      >Delete</a
-                    >
+                      Edit
+                    </router-link>
                   </td>
                 </tr>
               </tbody>
