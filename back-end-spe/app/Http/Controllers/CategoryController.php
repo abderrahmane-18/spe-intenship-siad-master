@@ -12,6 +12,7 @@ class CategoryController extends Controller
         $request->validate([
             'designation' => 'required|string|max:255',
             'codification' => 'required|string',
+
             'frequence_rpm' => 'required',
 
         ]);
@@ -20,6 +21,7 @@ class CategoryController extends Controller
             'designation' => $request->designation,
             'codification' => $request->codification,
             'frequence_rpm' => $request->frequence_rpm
+
 
         ]);
         return response()->json([
@@ -81,12 +83,18 @@ class CategoryController extends Controller
             'designation' => 'required|string|max:255',
             'codification' => 'required|string',
             'frequence_rpm' => 'required',
+
+         
+
+
         ]);
 
         $data = [
             'designation' => $request->designation,
             'codification' => $request->codification,
+
             'frequence_rpm' => $request->frequence_rpm,
+
         ];
 
         $category->update($data);

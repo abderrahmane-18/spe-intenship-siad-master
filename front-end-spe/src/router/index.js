@@ -1,4 +1,5 @@
 /* index.js route*/
+
 import store from "@/stores/store";
 import { createRouter, createWebHistory } from "vue-router";
 import Permission from "@/views/Pages/Permission.vue";
@@ -189,3 +190,5 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 export default router;
+
+

@@ -26,6 +26,8 @@
     "jspdf-autotable": "^3.8.2",
     "jsvectormap": "^1.5.3",
     "mitt": "^3.0.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.3.136",
     "pinia": "^2.1.7",
     "primevue": "^3.52.0",
     "vue": "^3.4.21",
