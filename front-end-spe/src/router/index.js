@@ -13,6 +13,8 @@ import Groupe from "@/components/Planification/Groupe.vue";
 import Controle from "@/components/Planification/Controle.vue";
 import Program from "@/components/Planification/Program.vue";
 import Report from "@/components/Planification/Report.vue";
+import equipment from "@/components/Realization/equipment.vue";
+
 import EditPermission from "@/components/Permissions/EditPermission.vue";
 import AddPermission from "@/components/Permissions/AddPermission.vue";
 
@@ -44,6 +46,12 @@ const routes = [
     meta: { title: "addCategory" },
   },
 
+  {
+    path: "/Realization/equipment",
+    name: "equipment",
+    component: equipment,
+    meta: { title: "equipment" },
+  },
   {
     path: "/controle",
     name: "ControleList",

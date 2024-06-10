@@ -91,8 +91,13 @@ const menuGroups = ref([
                     fill=""
                   />
                 </svg>`,
-        label: "Calendar",
-        route: "/calendar",
+        label: "Realization",
+        route: "#",
+        children: [
+          { label: "Equipment", route: "/Realization/equipment" },
+
+          //   { label: 'Users', route: '/pages/users' },
+        ],
       },
       /*
       {
@@ -185,7 +190,7 @@ const menuGroups = ref([
 
         route: "#",
         children: [
-          { label: "Categories", route: "/categories" },
+          { label: "Categories", route: "/controle" },
           { label: "Ralisation", route: "/controles/realize-control" },
           { label: "Program", route: "/planifications/Program" },
           { label: "reports", route: "/planifications/reports" },
