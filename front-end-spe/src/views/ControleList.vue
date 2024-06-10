@@ -291,7 +291,7 @@ const goToPreviousPage = () => {
                   </tr>
                 </tbody>
               </table>
-              <controleModel
+           <controleModel
                 v-if="showEditModal"
                 :showModal="showEditModal"
                 modalTitle="Edit category"
