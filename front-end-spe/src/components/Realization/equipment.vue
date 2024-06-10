@@ -1,3 +1,4 @@
+<!--equipment.vue-->
 <template>
   <Dashboard>
     <div class="mx-auto max-w-270">
@@ -9,13 +10,12 @@
           <div v-if="planifications.length === 0" class="text-center py-4">
             No planifications available for this month.
           </div>
-
           <!-- Table Section -->
           <div v-else>
             <table class="w-full border-collapse export-table">
               <thead>
                 <tr class="bg-gray-200">
-                  <th class="border border-black py-1 px-2 font-bold">N°</th>
+                  <th class="border border-black py-1 px-2 font-bold">NÂ°</th>
                   <th class="border border-black py-1 px-2 font-bold">
                     Control design
                   </th>
@@ -62,7 +62,6 @@
                   </th>
                 </tr>
               </thead>
-
               <tbody>
                 <template
                   v-for="(design, index_designation) in planifications"
@@ -116,6 +115,14 @@
                                   .get(equipment.number_equip)
                                   .includes(formattedDates[n].date),
                             }"
+                            @click="
+                              showRealizationModal(
+                                equipment,
+                                formattedDates[n],
+                                design.designation,
+                                groupe.number_group
+                              )
+                            "
                           >
                             <!-- Cell content if any -->
                           </td>
@@ -127,6 +134,312 @@
               </tbody>
             </table>
           </div>
+
+          <div
+            v-if="isModalVisible"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+          >
+            <div
+              class="bg-white rounded-lg shadow-lg w-full max-w-4xl relative"
+            >
+              <span
+                class="absolute top-6 right-8 text-gray-500 cursor-pointer font-bold text-2xl"
+                v-if="!hasScrolled"
+                @click="closeModal"
+                >&times;</span
+              >
+              <div v-if="currentScreen === 'initial'">
+                <h2 class="text-xl font-bold mb-4 px-6 pt-6">
+                  Realization Details
+                </h2>
+                <div class="mb-2 px-6">
+                  <strong>Control Design:</strong> {{ modalData.controlDesign }}
+                </div>
+                <div class="mb-2 px-6">
+                  <strong>Group Number:</strong> {{ modalData.groupNumber }}
+                </div>
+                <div class="mb-2 px-6">
+                  <strong>Equipment Number:</strong>
+                  {{ modalData.equipmentNumber }}
+                </div>
+                <div class="mb-2 px-6">
+                  <strong>Day:</strong> {{ modalData.currentDay }}
+                </div>
+                <div class="mb-2 px-6">
+                  <strong>Date:</strong> {{ modalData.currentDate }}
+                </div>
+                <div class="mb-2 px-6">
+                  <strong>Month:</strong> {{ modalData.currentMonth }}
+                </div>
+                <div class="mb-2 px-6">
+                  <strong>Time:</strong> {{ modalData.currentTime }}
+                </div>
+                <div class="flex justify-end px-6 py-4">
+                  <button
+                    class="bg-orange-500 text-white px-4 py-2 rounded mr-2"
+                    @click="closeModal"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="bg-blue-500 text-white px-4 py-2 rounded"
+                    @click="currentScreen = 'palier1'"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+              <div v-else-if="currentScreen.startsWith('palier')">
+                <h2 class="text-xl font-bold mb-4 px-6 pt-6">
+                  {{ currentScreen.toUpperCase() }}
+                </h2>
+                <table class="w-full border-collapse mx-0">
+                  <thead>
+                    <tr class="bg-gray-200">
+                      <th class="border border-black py-1 px-2 font-bold">
+                        Parameter
+                      </th>
+                      <th class="border border-black py-1 px-2 font-bold">
+                        Value Horizontal
+                      </th>
+                      <th class="border border-black py-1 px-2 font-bold">
+                        Value Axial
+                      </th>
+                      <th class="border border-black py-1 px-2 font-bold">
+                        Value Vertical
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="parameter in parameters" :key="parameter.name">
+                      <td
+                        class="border border-black py-1 px-2"
+                        :rowspan="parameter.name === 'deplacement' ? 3 : 1"
+                      >
+                        {{ parameter.label }}
+                      </td>
+                      <td
+                        v-if="parameter.name !== 'deplacement'"
+                        class="border border-black py-1 px-2"
+                      >
+                        <input
+                          type="number"
+                          class="border p-2 rounded w-full"
+                          :id="`${currentScreen.valueOf}-${parameter.name}Horizontal-input`"
+                          v-model="
+                            modalData.palierValues[currentScreen][
+                              `${parameter.name}Horizontal`
+                            ]
+                          "
+                        />
+                      </td>
+                      <td v-else class="border border-black py-1 px-2">
+                        <input
+                          type="number"
+                          class="border p-2 rounded w-full"
+                          :id="`${currentScreen.valueOf}-deplacementHorizontal-input`"
+                          v-model="
+                            modalData.palierValues[currentScreen][
+                              `deplacementHorizontal`
+                            ]
+                          "
+                        />
+                      </td>
+                      <td
+                        v-if="parameter.name !== 'deplacement'"
+                        class="border border-black py-1 px-2"
+                      >
+                        <input
+                          type="number"
+                          class="border p-2 rounded w-full"
+                          :id="`${currentScreen.valueOf}-${parameter.name}Axial-input`"
+                          v-model="
+                            modalData.palierValues[currentScreen][
+                              `${parameter.name}Axial`
+                            ]
+                          "
+                        />
+                      </td>
+                      <td v-else class="border border-black py-1 px-2">
+                        <input
+                          type="number"
+                          class="border p-2 rounded w-full"
+                          :id="`${currentScreen.valueOf}-deplacementAxial-input`"
+                          v-model="
+                            modalData.palierValues[currentScreen][
+                              `deplacementAxial`
+                            ]
+                          "
+                        />
+                      </td>
+                      <td
+                        v-if="parameter.name !== 'deplacement'"
+                        class="border border-black py-1 px-2"
+                      >
+                        <input
+                          type="number"
+                          class="border p-2 rounded w-full"
+                          :id="`${currentScreen.valueOf}-${parameter.name}Vertical-input`"
+                          v-model="
+                            modalData.palierValues[currentScreen][
+                              `${parameter.name}Vertical`
+                            ]
+                          "
+                        />
+                      </td>
+                      <td v-else class="border border-black py-1 px-2">
+                        <input
+                          type="number"
+                          class="border p-2 rounded w-full"
+                          :id="`${currentScreen.valueOf}-deplacementVertical-input`"
+                          v-model="
+                            modalData.palierValues[currentScreen][
+                              `deplacementVertical`
+                            ]
+                          "
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="flex justify-end px-6 py-4">
+                  <button
+                    v-if="fromReviewPage"
+                    class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    @click="backToReview"
+                  >
+                    Review
+                  </button>
+                  <button
+                    v-if="!fromReviewPage && currentScreen !== 'palier1'"
+                    class="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                    @click="currentScreen = 'initial'"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    v-else-if="!fromReviewPage"
+                    class="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                    @click="navigatePalier('previous')"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    v-if="!fromReviewPage && currentScreen !== 'palier4'"
+                    class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    @click="navigatePalier('next')"
+                  >
+                    Next
+                  </button>
+                  <button
+                    v-if="!fromReviewPage && currentScreen === 'palier4'"
+                    class="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    @click="backToReview"
+                  >
+                    Review
+                  </button>
+                  <!-- 
+                  <button
+                    class="bg-orange-500 text-white px-4 py-2 rounded"
+                    @click="closeModal"
+                  >
+                    Cancel
+                  </button>
+                  -->
+                </div>
+              </div>
+              <div
+                v-else-if="currentScreen === 'review'"
+                class="h-[500px] overflow-y-scroll"
+                @scroll="handleScroll"
+              >
+                <h2 class="text-xl font-bold mb-4 px-6 pt-6">
+                  Review Palier Data
+                </h2>
+                <div
+                  v-for="palier in Object.keys(modalData.palierValues)"
+                  :key="palier"
+                  class="px-6"
+                >
+                  <div class="flex items-center mb-2">
+                    <h3 class="text-lg font-bold mb-2 mr-6">
+                      {{ palier.toUpperCase() }}
+                    </h3>
+
+                    <table class="w-full border-collapse">
+                      <thead>
+                        <tr class="bg-gray-200">
+                          <th class="border border-black py-1 px-2 font-bold">
+                            Parameter
+                          </th>
+                          <th class="border border-black py-1 px-2 font-bold">
+                            Value Horizontal
+                          </th>
+                          <th class="border border-black py-1 px-2 font-bold">
+                            Value Axial
+                          </th>
+                          <th class="border border-black py-1 px-2font-bold">
+                            Value Vertical
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="parameter in parameters"
+                          :key="parameter.name"
+                        >
+                          <td class="border border-black py-1 px-2">
+                            {{ parameter.label }}
+                          </td>
+                          <td class="border border-black py-1 px-2">
+                            {{
+                              modalData.palierValues[palier][
+                                `${parameter.name}Horizontal`
+                              ]
+                            }}
+                          </td>
+                          <td class="border border-black py-1 px-2">
+                            {{
+                              modalData.palierValues[palier][
+                                `${parameter.name}Axial`
+                              ]
+                            }}
+                          </td>
+                          <td class="border border-black py-1 px-2">
+                            {{
+                              modalData.palierValues[palier][
+                                `${parameter.name}Vertical`
+                              ]
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <button
+                      class="text-blue px-2 py-1 rounded ml-2 mb-29"
+                      @click="editPalier(palier)"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+                <div class="flex justify-end px-6 py-4">
+                  <button
+                    class="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                    @click="currentScreen = 'palier4'"
+                  >
+                    Back
+                  </button>
+                  <button
+                    class="bg-blue-500 text-white px-4 py-2 rounded"
+                    @click="submitRealizationData"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -134,7 +447,8 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, reactive, nextTick } from "vue";
+
 import axios from "axios";
 import Dashboard from "@/views/Dashboard.vue";
 import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
@@ -175,7 +489,6 @@ const fetchData = async () => {
         },
       }
     );
-
     planifications.value = response.data;
   } catch (error) {
     console.error("API Error:", error);
@@ -242,26 +555,189 @@ const formattedDates = computed(() => {
   }
   return dates;
 });
+const isModalVisible = ref(false);
+const currentScreen = ref("initial");
+const hasScrolled = ref(false);
+const handleScroll = (event) => {
+  hasScrolled.value = event.target.scrollTop > 0;
+};
 
+const modalData = reactive({
+  controlDesign: "",
+  groupNumber: "",
+  equipmentNumber: "",
+  currentDay: "",
+  currentDate: "",
+  currentMonth: "",
+  currentTime: "",
+  palierValues: {
+    palier1: {
+      speedHorizontal: "",
+      speedAxial: "",
+      speedVertical: "",
+      AccelerationHorizontal: "",
+      AccelerationAxial: "",
+      AccelerationVertical: "",
+      deplacementHorizontal: "",
+      deplacementAxial: "",
+      deplacementVertical: "",
+    },
+    palier2: {
+      speedHorizontal: "",
+      speedAxial: "",
+      speedVertical: "",
+      AccelerationHorizontal: "",
+      AccelerationAxial: "",
+      AccelerationVertical: "",
+      deplacementHorizontal: "",
+      deplacementAxial: "",
+      deplacementVertical: "",
+    },
+    palier3: {
+      speedHorizontal: "",
+      speedAxial: "",
+      speedVertical: "",
+      AccelerationHorizontal: "",
+      AccelerationAxial: "",
+      AccelerationVertical: "",
+      deplacementHorizontal: "",
+      deplacementAxial: "",
+      deplacementVertical: "",
+    },
+    palier4: {
+      speedHorizontal: "",
+      speedAxial: "",
+      speedVertical: "",
+      AccelerationHorizontal: "",
+      AccelerationAxial: "",
+      AccelerationVertical: "",
+      deplacementHorizontal: "",
+      deplacementAxial: "",
+      deplacementVertical: "",
+    },
+  },
+});
+const parameters = [
+  { name: "speed", label: "Speed" },
+  { name: "Acceleration", label: "Acceleration" },
+  { name: "deplacement", label: "Deplacement" },
+];
+
+const closeModal = () => {
+  isModalVisible.value = false;
+  currentScreen.value = "initial";
+};
+const fromReviewPage = ref(false);
+
+const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
+  Object.assign(modalData, {
+    controlDesign,
+    groupNumber,
+    equipmentNumber: equipment.number_equip,
+    currentDay: date.day,
+    currentDate: date.date,
+    currentMonth: date.month,
+    currentTime: date.time,
+  });
+  isModalVisible.value = true;
+};
+
+const navigatePalier = (direction) => {
+  const palierOrder = ["palier1", "palier2", "palier3", "palier4"];
+  let currentIndex = palierOrder.indexOf(currentScreen.value);
+  if (direction === "next") {
+    currentScreen.value = palierOrder[currentIndex + 1];
+  } else if (direction === "previous") {
+    currentScreen.value = palierOrder[currentIndex - 1];
+  }
+  fromReviewPage.value = false;
+};
+
+const editPalier = (palier, parameter) => {
+  fromReviewPage.value = true;
+  currentScreen.value = palier;
+  nextTick(() => {
+    const input = document.querySelector(`#${palier}-${parameter}-input`);
+    if (input) {
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+      input.focus();
+    }
+  });
+};
+
+const backToReview = () => {
+  currentScreen.value = "review";
+  fromReviewPage.value = false;
+};
+
+const submitRealizationData = () => {
+  console.log("Realization Data Submitted:", modalData);
+  closeModal();
+};
 watch([selectedMonth, selectedYear], updateWeekDays);
 updateWeekDays();
 fetchData();
 </script>
 
 <style scoped>
-.table {
-  border-collapse: collapse;
-  width: 100%;
+.table-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
-.table th,
-.table td {
-  border: 1px solid black;
-  padding: 8px;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/*
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+}
+.export-table th,
+.export-table td {
   text-align: center;
 }
-
-.bg-blue-200 {
-  background-color: #bfdbfe;
-}
+  */
 </style>
