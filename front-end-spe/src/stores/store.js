@@ -22,6 +22,8 @@ const store = createStore({
     roles: [],
     permissions: [],
     data: [],
+    paliers: [],
+    parameters: [],
 
     selectedMonth: null,
     selectedYear: new Date().getFullYear(),
@@ -96,6 +98,12 @@ const store = createStore({
       state.designations = designations
     },
     */
+    ADD_PARAMETER(state, payload) {
+      state.paliers.push(payload);
+    },
+    SET_PALIERS(state, paliers) {
+      state.paliers = paliers;
+    },
     SET_USERS(state, users) {
       state.users = users;
       state.lastFetchTime = Date.now();
@@ -203,6 +211,35 @@ const store = createStore({
         console.error("Error fetching permissions:", error);
       }
     },
+    async addPalierParameter({ commit }, parameter) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/api/realizations",
+          parameter,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        commit("ADD_PARAMETER", response.data);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
+    async fetchPaliers({ commit }) {
+      try {
+        const response = await axios.get("http://localhost:8000/api/paliers", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        commit("SET_PALIERS", response.data);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
+
     async addPermission({ commit }, permission) {
       try {
         const response = await axios.post(

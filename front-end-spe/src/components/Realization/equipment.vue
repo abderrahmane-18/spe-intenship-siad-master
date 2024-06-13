@@ -120,7 +120,11 @@
                                 equipment,
                                 formattedDates[n],
                                 design.designation,
-                                groupe.number_group
+                                groupe.number_group,
+                                findPlanificationId(
+                                  equipment.number_equip,
+                                  formattedDates[n].date
+                                )
                               )
                             "
                           >
@@ -459,7 +463,8 @@ const currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-based
 const currentYear = new Date().getFullYear();
 const selectedMonth = ref(currentMonth); // Default to current month
 const selectedYear = ref(currentYear); // Default to current year
-
+import { useStore } from "vuex";
+/*
 const planificationDates = computed(() => {
   const dates = new Map();
   planifications.value.forEach((design) => {
@@ -477,7 +482,26 @@ const planificationDates = computed(() => {
   });
   return dates;
 });
-
+*/
+const planificationDates = computed(() => {
+  const dates = new Map();
+  planifications.value.forEach((design) => {
+    design.groupes.forEach((groupe) => {
+      groupe.equipments.forEach((equipment) => {
+        const controleId = equipment.number_equip;
+        if (!dates.has(controleId)) {
+          dates.set(controleId, []);
+        }
+        equipment.dates.forEach((dateObj) => {
+          dates
+            .get(controleId)
+            .push(new Date(dateObj.date).toLocaleDateString());
+        });
+      });
+    });
+  });
+  return dates;
+});
 const fetchData = async () => {
   try {
     const response = await axios.get(
@@ -489,6 +513,7 @@ const fetchData = async () => {
         },
       }
     );
+    console.log("response.data", response.data);
     planifications.value = response.data;
   } catch (error) {
     console.error("API Error:", error);
@@ -570,6 +595,7 @@ const modalData = reactive({
   currentDate: "",
   currentMonth: "",
   currentTime: "",
+  planificationId: "", // Add planificationId here
   palierValues: {
     palier1: {
       speedHorizontal: "",
@@ -629,7 +655,13 @@ const closeModal = () => {
 };
 const fromReviewPage = ref(false);
 
-const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
+const showRealizationModal = (
+  equipment,
+  date,
+  controlDesign,
+  groupNumber,
+  planificationId
+) => {
   Object.assign(modalData, {
     controlDesign,
     groupNumber,
@@ -638,10 +670,53 @@ const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
     currentDate: date.date,
     currentMonth: date.month,
     currentTime: date.time,
+    planificationId,
   });
   isModalVisible.value = true;
 };
+const findPlanificationId = (equipmentNumber, date) => {
+  const planification = planifications.value.flatMap((design) =>
+    design.groupes.flatMap((groupe) =>
+      groupe.equipments
+        .filter((equipment) => equipment.number_equip === equipmentNumber)
+        .flatMap((equipment) =>
+          equipment.dates
+            .filter((equipmentDate) => equipmentDate === date)
+            .map(
+              (equipmentDate) =>
+                planifications.value
+                  .find(
+                    (plan) =>
+                      plan.groupes.some(
+                        (grp) =>
+                          grp.equipments.some(
+                            (equip) =>
+                              equip.number_equip === equipmentNumber &&
+                              equip.dates.includes(equipmentDate)
+                          ) && grp.number_group === groupe.number_group
+                      ) && plan.id_category === design.id_category
+                  )
+                  ?.planifications.find(
+                    (planif) =>
+                      planif.controle_id ===
+                        planifications.value
+                          .flatMap((d) =>
+                            d.groupes.flatMap((g) =>
+                              g.equipments.filter(
+                                (e) => e.number_equip === equipmentNumber
+                              )
+                            )
+                          )
+                          .find((e) => e.number_equip === equipmentNumber).id &&
+                      planif.date_planified === equipmentDate
+                  )?.id
+            )
+        )
+    )
+  );
 
+  return planification[0]?.id || null;
+};
 const navigatePalier = (direction) => {
   const palierOrder = ["palier1", "palier2", "palier3", "palier4"];
   let currentIndex = palierOrder.indexOf(currentScreen.value);
@@ -669,10 +744,52 @@ const backToReview = () => {
   currentScreen.value = "review";
   fromReviewPage.value = false;
 };
+const store = useStore();
 
-const submitRealizationData = () => {
-  console.log("Realization Data Submitted:", modalData);
-  closeModal();
+const submitRealizationData = async () => {
+  try {
+    const payload = {
+      planification_id: modalData.planificationId,
+
+      palier_values: [
+        ...formatPalierValues(modalData.palierValues.palier1, "palier1"),
+        ...formatPalierValues(modalData.palierValues.palier2, "palier2"),
+        ...formatPalierValues(modalData.palierValues.palier3, "palier3"),
+        ...formatPalierValues(modalData.palierValues.palier4, "palier4"),
+      ],
+    };
+    console.log("modalData.planificationId", modalData.planificationId);
+    await store.dispatch("addPalierParameter", payload);
+    closeModal();
+  } catch (error) {
+    console.error("Submission Error:", error);
+  }
+};
+
+const formatPalierValues = (palierValues, palierName) => {
+  return [
+    {
+      palier_name: palierName,
+      parameter_name: "speed",
+      value_horizental: palierValues.speedHorizontal,
+      value_axial: palierValues.speedAxial,
+      value_vertical: palierValues.speedVertical,
+    },
+    {
+      palier_name: palierName,
+      parameter_name: "acceleration",
+      value_horizental: palierValues.AccelerationHorizontal,
+      value_axial: palierValues.AccelerationAxial,
+      value_vertical: palierValues.AccelerationVertical,
+    },
+    {
+      palier_name: palierName,
+      parameter_name: "deplacement",
+      value_horizental: palierValues.deplacementHorizontal,
+      value_axial: palierValues.deplacementAxial,
+      value_vertical: palierValues.deplacementVertical,
+    },
+  ];
 };
 watch([selectedMonth, selectedYear], updateWeekDays);
 updateWeekDays();

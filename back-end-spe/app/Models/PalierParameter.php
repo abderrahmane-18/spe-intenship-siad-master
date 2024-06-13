@@ -14,6 +14,6 @@ class PalierParameter extends Model
 
     public function planification()
     {
-        return $this->belongsTo(Planification::class);
+        return $this->belongsTo(Planification::class,'planification_id');
     }
 }

@@ -19,4 +19,8 @@ class Planification extends Model
     {
         return $this->belongsTo(Controle::class, 'controle_id');
     }
+    public function palierParameters()
+    {
+        return $this->hasMany(PalierParameter::class,'planification_id');
+    }
 }

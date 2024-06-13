@@ -4,11 +4,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ControleController;
 use App\Http\Controllers\GroupeController;
+use App\Http\Controllers\PalierParameterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PlanificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Models\Controle;
+use App\Models\PalierParameter;
 use App\Models\Planification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::put('permission/{permissionId}', [PermissionController::class, 'update']);
     Route::post('permission', [PermissionController::class, 'store']);
     Route::get('permissions', [App\Http\Controllers\PermissionController::class, 'index']);
+    Route::post('/realizations', [PalierParameterController::class, 'store']);
 
     Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermissionController::class, 'destroy']);
 

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /*
-        Schema::table('categories', function (Blueprint $table) {
-            $table->renameColumn('description', 'frequency_RPM');
-        });
-        */
+       
+            Schema::table('planifications', function (Blueprint $table) {
+                $table->dropColumn('realization_date');
+            });
+     
     }
 
     /**
@@ -23,10 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        /*
-        Schema::table('categories', function (Blueprint $table) {
-            $table->renameColumn('frequency_RPM', 'description');
-        });
-        */
+        Schema::table('planifications', function (Blueprint $table) {
+         
+                $table->columnType('realization_date');
+            });
+     
     }
 };

@@ -12,6 +12,7 @@ class PlanificationController extends Controller
 {
     public function index(Request $request)
     {
+        $data=Planification::get();
         $month = $request->query('month');
         $year = $request->query('year');
 
@@ -19,7 +20,8 @@ class PlanificationController extends Controller
             ->whereMonth('date', '=', $month)
             ->whereYear('date', '=', $year)
             ->get();
-
+          
+            
         return response()->json($planifications);
     }
     public function store(Request $request)
@@ -102,6 +104,55 @@ class PlanificationController extends Controller
         return response()->json($response);
     }
 
+// new 
+public function getPlanificationsByMonthYear(Request $request)
+{
+    $request->validate([
+        'month' => 'required|integer|min:1|max:12',
+        'year' => 'required|integer|min:1900|max:' . date('Y'),
+    ]);
+
+    $month = $request->input('month');
+    $year = $request->input('year');
+
+    // Fetch the planifications for the given month and year
+    $planifications = Planification::whereYear('date_planified', $year)
+        ->whereMonth('date_planified', $month)
+        ->with('controle.category', 'controle.groupe')
+        ->get();
+
+    // Group the planifications by category and format the response
+    $response = $planifications->groupBy('controle.id_categorie')->map(function ($groupedPlanifications) {
+        $category = $groupedPlanifications->first()->controle->category;
+        return [
+            'id_category' => $category->id,
+            'designation' => $category->designation,
+            'groupes' => $groupedPlanifications->groupBy('controle.number_group')->map(function ($groupedPlanifications, $numberGroup) {
+                return [
+                    'number_group' => $numberGroup,
+                    'equipments' => $groupedPlanifications->groupBy('controle.number_equip')->map(function ($groupedPlanifications) {
+                        $controle = $groupedPlanifications->first()->controle;
+                        return [
+                            'number_equip' => $controle->number_equip,
+                            'dates' => $groupedPlanifications->map(function ($planification) {
+                                return [
+                                    'date' => $planification->date_planified->format('Y-m-d'),
+                                    'planificationId' => $planification->id,
+                                ];
+                            })->values()->all(),
+                        ];
+                    })->values()->all(),
+                ];
+            })->values()->all(),
+        ];
+    })->values()->all();
+
+    return response()->json($response, 200);
+}
+
+
+
+/*
     public function getPlanificationsByMonthYear(Request $request)
     {
         $request->validate([
@@ -117,6 +168,7 @@ class PlanificationController extends Controller
             ->whereMonth('date_planified', $month)
             ->with('controle.category', 'controle.groupe')
             ->get();
+            
 
         // Group the planifications by category and format the response
         $response = $planifications->groupBy('controle.id_categorie')->map(function ($groupedPlanifications, $idCategory) {
@@ -140,9 +192,16 @@ class PlanificationController extends Controller
                 })->values()->all(),
             ];
         })->values()->all();
+        $result = [
+            'status' => true,
+            'message' => 'Category has been updated successfully',
+            'data' => $response,
+        ];
 
-        return response()->json($response);
+       // return response()->json($result, 200);
+        return response()->json($response,200);
     }
+    */
     public function getControlDataForParameters()
     {
         $categories = Category::with('controles.groupe')->get();
