@@ -14,7 +14,8 @@ use App\Models\PalierParameter;
 use App\Models\Planification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ChatController;
+use Illuminate\Support\Facades\Broadcast;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -23,35 +24,44 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 Route::post('login', [AuthController::class, 'login']);
 //Route::put('update-profile', [AuthController::class, 'updateProfile']);
-Route::patch('{id}/update', [AuthController::class, 'update']);
+//Route::patch('{id}/update', [AuthController::class, 'update']);
 Route::get('user', [AuthController::class, 'index']);
 Route::get('user/{id}', [AuthController::class, 'showUser']);
 
+;
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 
-
-Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], function () {
+Broadcast::routes(['predix' => 'api', 'middleware' => ['auth:sanctum']]);
+Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin|staff']], function () {
     Route::post('add-category', [CategoryController::class, "store"]);
     Route::put('update-category/{cat_id}', [CategoryController::class, "update"]);
     Route::delete('categories/delete/{id}',  [CategoryController::class, "destroy"]);
 
-
     Route::get('roles', [RoleController::class, "index"]);
+  
     Route::get('roles/{id}', [RoleController::class, "showRole"]);
     //Route::resource('permissions', App\Http\Controllers\PermissionController::class);
     Route::put('permission/{permissionId}', [PermissionController::class, 'update']);
     Route::post('permission', [PermissionController::class, 'store']);
     Route::get('permissions', [App\Http\Controllers\PermissionController::class, 'index']);
-    Route::post('/realizations', [PalierParameterController::class, 'store']);
+    Route::post('/realization', [PalierParameterController::class, 'store']);
 
-    Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermissionController::class, 'destroy']);
+
+    //Route::post('/store-collaborator', [PalierParameterController::class, 'store']);
+
+
+    Route::delete('permissions/delete/{per_id}',  [PermissionController::class, "destroy"]);
+
+    //Route::delete('permissions/{per_id}/delete', [PermissionController::class, 'destroy']);
 
     Route::get('roles/{roleId}/delete', [App\Http\Controllers\RoleController::class, 'destroy']);
     Route::get('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'addPermissionToRole']);
     Route::put('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'givePermissionToRole']);
 
     Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::patch('users/{id}', [App\Http\Controllers\UserController::class]);
+    //Route::put('/user/{id}', [UserController::class,'update']);
+    Route::put('/user/{user}', [UserController::class, 'update']);
 
     Route::get('user/role/{id}', [UserController::class, 'getUserWithById']);
 
@@ -62,7 +72,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     Route::get('categories/paginate', [CategoryController::class, "index"]);
     Route::get('categories', [CategoryController::class, "getAllCategories"]);
 
-    Route::get('groupe', [GroupeController::class, "index"]);
+    Route::get('groupes', [GroupeController::class, "index"]);
     Route::post('groupe', [GroupeController::class, "store"]);
     Route::post('planification', [PlanificationController::class, "store"]);
 
@@ -75,4 +85,6 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin']], funct
     //  Route::get('/planifications', [PlanificationController::class, 'getPlanificationsByMonthYear']);
 
     // Route::get('categories', [CategoryController::class, "index"]);
+ 
+
 });

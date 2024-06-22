@@ -43,7 +43,8 @@ class UserController extends Controller implements HasMiddleware
 */
     public function index()
     {
-        $users = User::with('roles')->get();
+        $users = User::with('roles')->orderBy('id', 'asc')->get();
+
 
         $usersWithRoleNames = $users->map(function ($user) {
             $roleNames = $user->roles->pluck('name');
@@ -94,32 +95,35 @@ class UserController extends Controller implements HasMiddleware
             'userRoles' => $userRoles
         ]);
     }
-
     public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'password' => 'nullable|string|min:8|max:20',
-            'roles' => 'required'
+            'email' => 'required|email|max:255', // Added email validation
+            'roles' => 'present|array' // Changed validation rule for roles
         ]);
-
+    
         $data = [
             'name' => $request->name,
             'email' => $request->email,
         ];
-        /*
-        if (!empty($request->password)) {
-            $data += [
-                'password' => Hash::make($request->password),
-            ];
-        }
-        */
-
+    
         $user->update($data);
-        $user->syncRoles($request->roles);
-        $result = array('status' => true, 'message' => 'user hase been updated succefully', 'data' => $user);
+    
+        // Sync roles only if roles are provided in the request
+        if ($request->has('roles')) {
+            $user->syncRoles($request->roles);
+        }
+    
+        $user->load('roles');
+    
+        $result = array(
+            'status' => true,
+            'message' => 'User has been updated successfully',
+            'data' => $user
+        );
+    
         return response()->json($result, 200);
-        //return redirect('/users')->with('status', 'User Updated Successfully with roles');
     }
     public function getUserWithById($id)
     {

@@ -15,7 +15,7 @@ import controleModel from "@/components/Controles/controleModel.vue";
 import deleteModel from "@/components/Controles/deleteModel.vue";
 import { watch } from "vue";
 
-const pageTitle = ref("Controles");
+const pageTitle = ref("Categories");
 const showAddModal = ref(false);
 
 const showEditModal = ref(false);
@@ -291,7 +291,7 @@ const goToPreviousPage = () => {
                   </tr>
                 </tbody>
               </table>
-           <controleModel
+              <controleModel
                 v-if="showEditModal"
                 :showModal="showEditModal"
                 modalTitle="Edit category"

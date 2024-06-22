@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\PalierParameter;
 use Illuminate\Http\Request;
+use App\Events\NewNotification;
+use App\Events\NotificationEvent1;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use MyEvent;
 
 class PalierParameterController extends Controller
 {
     public function store(Request $request)
     {
+       
+
+
         $validatedData = $request->validate([
             'planification_id' => 'required|exists:planifications,id',
             'palier_values' => 'required|array',
@@ -32,7 +40,8 @@ class PalierParameterController extends Controller
                 'value_axial' => $palierValue['value_axial'],
             ]);
         }
+       
 
-        return response()->json(['message' => 'Realization data stored successfully']);
+        return response()->json(['message' =>  'ok' ]);
     }
 }
