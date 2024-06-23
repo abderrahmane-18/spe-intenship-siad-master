@@ -179,15 +179,16 @@ const months = [
 const planificationDates = computed(() => {
   const dates = new Map();
   planifications.value.forEach((design) => {
-    console.log("pka");
     design.groupes.forEach((groupe) => {
       groupe.equipments.forEach((equipment) => {
         const controleId = equipment.number_equip;
         if (!dates.has(controleId)) {
           dates.set(controleId, []);
         }
-        equipment.dates.forEach((date) => {
-          dates.get(controleId).push(new Date(date).toLocaleDateString());
+        equipment.dates.forEach((dateObj) => {
+          dates
+            .get(controleId)
+            .push(new Date(dateObj.date).toLocaleDateString());
         });
       });
     });
@@ -217,6 +218,7 @@ const fetchData = async () => {
     console.error("API Error:", error);
   }
 };
+const pageTitle = "Report ";
 
 function groupLength(design) {
   return design.groupes.reduce((acc, curr) => acc + curr.equipments.length, 0);

@@ -9,6 +9,7 @@ import App from "./App.vue";
 import router from "./router";
 //import { Gates } from 'vue-gates';
 //import Gate from 'vue-gates';
+import VueApexCharts from "vue3-apexcharts";
 
 //import 'vue-toastification/dist/index.css'
 import Toast, { POSITION } from "vue-toastification";
@@ -23,7 +24,6 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 library.add(far);
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
-import VueApexCharts from "vue3-apexcharts";
 import store from "./stores/store";
 import VueGates from "vue-gates";
 import "vue-toastification/dist/index.css";
@@ -39,7 +39,7 @@ app.use(createPinia());
 app.use(router);
 
 app.component("font-awesome-icon", FontAwesomeIcon);
-app.use(VueApexCharts);
+
 const userName = ref(localStorage.getItem("name") || "");
 app.provide("userName", userName);
 app.use(store);

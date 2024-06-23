@@ -14,7 +14,7 @@ class RoleController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware(middleware: ('permission:view role'), only: ['index']),
+            new Middleware(middleware: ('permission:view roles'), only: ['index']),
             new Middleware(middleware: ('permission:create role'), only: ['create', 'store', 'addPermissionToRole', 'givePermissionToRole']),
             new Middleware(middleware: ('permission:update role'), only: ['update', 'edit']),
             new Middleware(middleware: ('permission:delete role'), only: ['destroy']),
@@ -96,7 +96,7 @@ class RoleController extends Controller implements HasMiddleware
     {
         $role = Role::find($roleId);
         $role->delete();
-        return redirect('roles')->with('status', 'Role Deleted Successfully');
+        return response()->json(['user' => 'Role Deleted']);
     }
     public function addPermissionToRole($roleId)
     {

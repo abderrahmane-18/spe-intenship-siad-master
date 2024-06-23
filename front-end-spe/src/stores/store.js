@@ -22,10 +22,17 @@ const store = createStore({
     roles: [],
     permissions: [],
     data: [],
-
+    paliers: [],
+    parameters: [],
+    notifications: [],
+    notifying: false,
     selectedMonth: null,
     selectedYear: new Date().getFullYear(),
     accessToken: localStorage.getItem("access_token") || null,
+    name_user: localStorage.getItem("name") || null,
+    user_id: localStorage.getItem("id") || null,
+    planifications: [], // Assuming you have an array to store planifications
+
     // groupeIds:[],
     lastFetchTime: null,
     fetchInterval: 30000, // Fetch interval in milliseconds (e.g., 30 seconds)
@@ -34,10 +41,26 @@ const store = createStore({
     setAddedData(state, payload) {
       state.addedData = payload;
     },
+    UPDATE_DATE_REALIZED(state, { planificationId, date_realized }) {
+      const planification = state.planifications.find(
+        (p) => p.id === planificationId
+      );
+      if (planification) {
+        planification.date_realized = date_realized;
+      }
+    },
+
     SET_ACCESS_TOKEN(state, token) {
       state.accessToken = token;
     },
-
+    SET_NAME(state, name_user) {
+      state.name_user = name_user;
+      localStorage.setItem("name", name_user);
+    },
+    SET_ID(state, user_id) {
+      state.user_id = user_id;
+      localStorage.setItem("id", user_id);
+    },
     setSelectedCells(state, payload) {
       state.selectedCells = payload;
     },
@@ -47,6 +70,13 @@ const store = createStore({
     },
     SET_PERMISSIONS(state, userpermissions) {
       state.permissionsuser = userpermissions;
+    },
+    ADD_NOTIFICATION(state, notification) {
+      state.notifications.unshift(notification); // Add to the beginning of the array
+      state.notifying = true;
+    },
+    CLEAR_NOTIFYING(state) {
+      state.notifying = false;
     },
     ADD_PERMISSION(state, permission) {
       state.permissions.push(permission);
@@ -96,6 +126,12 @@ const store = createStore({
       state.designations = designations
     },
     */
+    ADD_PARAMETER(state, payload) {
+      state.paliers.push(payload);
+    },
+    SET_PALIERS(state, paliers) {
+      state.paliers = paliers;
+    },
     SET_USERS(state, users) {
       state.users = users;
       state.lastFetchTime = Date.now();
@@ -154,7 +190,6 @@ const store = createStore({
   },
   actions: {
     savePlanifications({ state }) {
-      // API call to save the planifications
       const planificationsData = state.selectedCells.reduce((acc, cell) => {
         const existingPlan = acc.find(
           (plan) => plan.controle_id === cell.controle_id
@@ -203,6 +238,58 @@ const store = createStore({
         console.error("Error fetching permissions:", error);
       }
     },
+    async updateDateRealized({ commit }, { planificationId, payload }) {
+      try {
+        const response = await axios.patch(
+          `http://localhost:8000/api/planification/${planificationId}/date-realized`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        commit("UPDATE_DATE_REALIZED", {
+          planificationId,
+          date_realized: payload.date_realized,
+        });
+      } catch (error) {
+        console.error(
+          "API Error:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    },
+    async addPalierParameter({ commit }, parameter) {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/api/realization",
+          parameter,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        commit("ADD_PARAMETER", response.data);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
+
+    async fetchPaliers({ commit }) {
+      try {
+        const response = await axios.get("http://localhost:8000/api/paliers", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        commit("SET_PALIERS", response.data);
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    },
+
     async addPermission({ commit }, permission) {
       try {
         const response = await axios.post(
@@ -268,7 +355,18 @@ const store = createStore({
         console.error("Error updating role permissions:", error);
       }
     },
-    async login({ commit }, credentials) {
+    handleNotification({ commit }, message) {
+      commit("ADD_NOTIFICATION", {
+        title: "New Notification",
+        details: message,
+        time: new Date().toLocaleString(),
+        route: "#", // You can customize this based on the notification type
+      });
+    },
+    clearNotifying({ commit }) {
+      commit("CLEAR_NOTIFYING");
+    },
+    async login({ commit, dispatch }, credentials) {
       try {
         const response = await axios.post(
           "http://localhost:8000/api/login",
@@ -276,15 +374,22 @@ const store = createStore({
         );
         const accessToken = response.data.access_token;
         const Permissions = response.data.permissions;
-
+        const name_user = response.data.name;
+        const user_id = response.data.id;
         localStorage.setItem("permissions", JSON.stringify(Permissions));
         localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("name", name_user);
+        localStorage.setItem("id", user_id);
         // localStorage.setItem("permissions", Permissions);
 
         console.log("20278 ", typeof response.data.permissions);
 
         commit("SET_ACCESS_TOKEN", accessToken);
+        commit("SET_NAME", name_user);
+        commit("SET_ID", user_id);
         commit("SET_USER_DATA", response.data);
+        //   dispatch("handleNotification", "User logged in successfully");
+        //console.log("handleNotification", response.data.message);
       } catch (error) {
         console.error("Error logging in:", error);
       }
@@ -443,7 +548,7 @@ const store = createStore({
     },
     async fetchGroupes({ commit }) {
       try {
-        const response = await axios.get("http://localhost:8000/api/groupe", {
+        const response = await axios.get("http://localhost:8000/api/groupes", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
@@ -554,6 +659,8 @@ const store = createStore({
     hasPermission: (state) => (permission) => {
       return state.permissions.includes(permission);
     },
+    getNotifications: (state) => state.notifications,
+    isNotifying: (state) => state.notifying,
   },
 });
 

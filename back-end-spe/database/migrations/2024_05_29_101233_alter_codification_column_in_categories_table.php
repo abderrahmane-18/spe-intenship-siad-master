@@ -12,9 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /*
         Schema::table('categories', function (Blueprint $table) {
             DB::statement('ALTER TABLE categories ALTER COLUMN codification TYPE INTEGER USING codification::integer');
         });
+        */
     }
 
     /**
@@ -22,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        /*
         Schema::table('categories', function (Blueprint $table) {
             DB::statement('ALTER TABLE categories ALTER COLUMN codification TYPE TEXT');
         });
+        */
     }
 };

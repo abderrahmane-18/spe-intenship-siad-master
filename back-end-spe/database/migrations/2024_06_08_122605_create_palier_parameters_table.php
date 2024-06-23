@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('palier_name');
             $table->string('parameter_name');
-            $table->float('value_horizental');
-            $table->float('value_vertical');
-            $table->float('value_axial');
-            $table->foreignId('planification_id')->constrained('planifications')->onDelete('cascade');
+            $table->double('value_horizental');
+            $table->double('value_vertical');
+            $table->double('value_axial');
+            $table->unsignedBigInteger('planification_id');
+
+            $table->foreign('planification_id')->references('id')->on('planifications')->onDelete('cascade');
 
             $table->unique(['palier_name', 'parameter_name', 'planification_id']);
             $table->timestamps();

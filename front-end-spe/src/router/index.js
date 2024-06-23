@@ -24,7 +24,7 @@ import editUser from "@/components/Users/editUser.vue";
 
 import Role from "@/views/Pages/Role.vue"; // import Roles
 import User from "@/views/Pages/User.vue"; // import Users
-
+import ChatCard from "@/components/ChatCard.vue";
 const routes = [
   { path: "/", name: "Login", component: Login },
   {
@@ -39,6 +39,14 @@ const routes = [
     name: "Admin",
     component: () => import("../views/Admin.vue"),
   },
+
+  {
+    path: "/profile/messages",
+    name: "ChatCard",
+    component: ChatCard,
+    meta: { title: "ChatCard" },
+  },
+
   {
     path: "/categories/add-category",
     name: "addCategory",
@@ -198,5 +206,3 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 export default router;
-
-
