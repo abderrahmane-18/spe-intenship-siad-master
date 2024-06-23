@@ -31,6 +31,7 @@ const store = createStore({
     accessToken: localStorage.getItem("access_token") || null,
     name_user: localStorage.getItem("name") || null,
     user_id: localStorage.getItem("id") || null,
+    planifications: [], // Assuming you have an array to store planifications
 
     // groupeIds:[],
     lastFetchTime: null,
@@ -40,6 +41,15 @@ const store = createStore({
     setAddedData(state, payload) {
       state.addedData = payload;
     },
+    UPDATE_DATE_REALIZED(state, { planificationId, date_realized }) {
+      const planification = state.planifications.find(
+        (p) => p.id === planificationId
+      );
+      if (planification) {
+        planification.date_realized = date_realized;
+      }
+    },
+
     SET_ACCESS_TOKEN(state, token) {
       state.accessToken = token;
     },
@@ -180,7 +190,6 @@ const store = createStore({
   },
   actions: {
     savePlanifications({ state }) {
-      // API call to save the planifications
       const planificationsData = state.selectedCells.reduce((acc, cell) => {
         const existingPlan = acc.find(
           (plan) => plan.controle_id === cell.controle_id
@@ -227,6 +236,28 @@ const store = createStore({
         commit("SET_PERMISSIONS", response.data.permissions);
       } catch (error) {
         console.error("Error fetching permissions:", error);
+      }
+    },
+    async updateDateRealized({ commit }, { planificationId, payload }) {
+      try {
+        const response = await axios.patch(
+          `http://localhost:8000/api/planification/${planificationId}/date-realized`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        commit("UPDATE_DATE_REALIZED", {
+          planificationId,
+          date_realized: payload.date_realized,
+        });
+      } catch (error) {
+        console.error(
+          "API Error:",
+          error.response ? error.response.data : error.message
+        );
       }
     },
     async addPalierParameter({ commit }, parameter) {

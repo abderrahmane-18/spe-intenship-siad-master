@@ -10,6 +10,13 @@ use Carbon\Carbon;
 
 class PlanificationController extends Controller
 {
+    public function get(Request $request)
+    {
+        $data=Planification::get();
+        return response()->json($data);
+
+
+    }
     public function index(Request $request)
     {
         $data=Planification::get();
@@ -236,5 +243,25 @@ public function getPlanificationsByMonthYear(Request $request)
         });
 
         return response()->json($data);
+    }
+    public function updateDateRealized(Request $request, $id)
+    {
+        try {
+            $validatedData = $request->validate([
+                'date_realized' => 'required|date',
+            ]);
+    
+            $planification = Planification::find($id);
+            if ($planification) {
+                $planification->date_realized = $validatedData['date_realized'];
+                $planification->save();
+                return response()->json(['message' => 'ok']);
+            } else {
+                return response()->json(['message' => 'Planification not found'], 404);
+            }
+        } catch (\Exception $e) {
+           
+            return response()->json(['message' => 'An error occurred'], 500);
+        }
     }
 }

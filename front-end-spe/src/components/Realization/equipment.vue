@@ -107,7 +107,7 @@
                             :id="`cell-${index_designation}-${index_group}-${index_equipement}`"
                             class="border border-black py-1 px-2 cursor-pointer"
                             :class="{
-                              'bg-blue-200':
+                              'bg-blue-400':
                                 planificationDates.has(
                                   equipment.number_equip
                                 ) &&
@@ -120,14 +120,11 @@
                                 equipment,
                                 formattedDates[n],
                                 design.designation,
-                                groupe.number_group,
-                                findPlanificationId(
-                                  equipment.number_equip,
-                                  formattedDates[n].date
-                                )
+                                groupe.number_group
                               )
                             "
                           >
+                            {{ equipment.dates.planificationId }}
                             <!-- Cell content if any -->
                           </td>
                         </template>
@@ -148,8 +145,8 @@
             >
               <span
                 class="absolute top-6 right-8 text-gray-500 cursor-pointer font-bold text-2xl"
-                v-if="!hasScrolled"
                 @click="closeModal"
+                v-if="!hasScrolled"
                 >&times;</span
               >
               <div v-if="currentScreen === 'initial'">
@@ -166,11 +163,12 @@
                   <strong>Equipment Number:</strong>
                   {{ modalData.equipmentNumber }}
                 </div>
+
                 <div class="mb-2 px-6">
-                  <strong>Day:</strong> {{ modalData.currentDay }}
+                  <strong>Day:</strong> {{ modalData.plannedDay }}
                 </div>
                 <div class="mb-2 px-6">
-                  <strong>Date:</strong> {{ modalData.currentDate }}
+                  <strong>Date:</strong> {{ modalData.plannedDate }}
                 </div>
                 <div class="mb-2 px-6">
                   <strong>Month:</strong> {{ modalData.currentMonth }}
@@ -228,6 +226,7 @@
                       >
                         <input
                           type="number"
+                          required
                           class="border p-2 rounded w-full"
                           :id="`${currentScreen.valueOf}-${parameter.name}Horizontal-input`"
                           v-model="
@@ -239,6 +238,7 @@
                       </td>
                       <td v-else class="border border-black py-1 px-2">
                         <input
+                          required
                           type="number"
                           class="border p-2 rounded w-full"
                           :id="`${currentScreen.valueOf}-deplacementHorizontal-input`"
@@ -254,6 +254,7 @@
                         class="border border-black py-1 px-2"
                       >
                         <input
+                          required
                           type="number"
                           class="border p-2 rounded w-full"
                           :id="`${currentScreen.valueOf}-${parameter.name}Axial-input`"
@@ -266,6 +267,7 @@
                       </td>
                       <td v-else class="border border-black py-1 px-2">
                         <input
+                          required
                           type="number"
                           class="border p-2 rounded w-full"
                           :id="`${currentScreen.valueOf}-deplacementAxial-input`"
@@ -281,6 +283,7 @@
                         class="border border-black py-1 px-2"
                       >
                         <input
+                          required
                           type="number"
                           class="border p-2 rounded w-full"
                           :id="`${currentScreen.valueOf}-${parameter.name}Vertical-input`"
@@ -293,6 +296,7 @@
                       </td>
                       <td v-else class="border border-black py-1 px-2">
                         <input
+                          required
                           type="number"
                           class="border p-2 rounded w-full"
                           :id="`${currentScreen.valueOf}-deplacementVertical-input`"
@@ -315,7 +319,7 @@
                     Review
                   </button>
                   <button
-                    v-if="!fromReviewPage && currentScreen !== 'palier1'"
+                    v-if="!fromReviewPage && currentScreen === 'palier1'"
                     class="bg-green-500 text-white px-4 py-2 rounded mr-2"
                     @click="currentScreen = 'initial'"
                   >
@@ -457,9 +461,9 @@ import axios from "axios";
 import Dashboard from "@/views/Dashboard.vue";
 import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
 
-const pageTitle = "Current Month Planifications";
+const pageTitle = "Realization ";
 const planifications = ref([]);
-const currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-based
+const currentMonth = new Date().getMonth() + 7; // JavaScript months are 0-based
 const currentYear = new Date().getFullYear();
 const selectedMonth = ref(currentMonth); // Default to current month
 const selectedYear = ref(currentYear); // Default to current year
@@ -483,6 +487,10 @@ const planificationDates = computed(() => {
   return dates;
 });
 */
+const selectedCategory = ref(null);
+const selectedGroup = ref(null);
+const selectedEquipment = ref(null);
+const selectedDate = ref(null);
 const planificationDates = computed(() => {
   const dates = new Map();
   planifications.value.forEach((design) => {
@@ -502,6 +510,7 @@ const planificationDates = computed(() => {
   });
   return dates;
 });
+
 const fetchData = async () => {
   try {
     const response = await axios.get(
@@ -591,11 +600,12 @@ const modalData = reactive({
   controlDesign: "",
   groupNumber: "",
   equipmentNumber: "",
-  currentDay: "",
-  currentDate: "",
+  plannedDay: "",
+  plannedDate: "",
   currentMonth: "",
   currentTime: "",
   planificationId: "", // Add planificationId here
+  dateRealized: "",
   palierValues: {
     palier1: {
       speedHorizontal: "",
@@ -655,79 +665,50 @@ const closeModal = () => {
 };
 const fromReviewPage = ref(false);
 
-const showRealizationModal = (
-  equipment,
-  date,
-  controlDesign,
-  groupNumber,
-  planificationId
-) => {
+const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
+  const selectedDate = equipment.dates.find(
+    (d) => new Date(d.date).toLocaleDateString() === date.date
+  );
+  const planificationId = selectedDate ? selectedDate.planificationId : null;
+  const currentDate = new Date();
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const formattedDate = currentDate.toLocaleDateString(undefined, options);
+  const formattedTime = currentDate.toLocaleTimeString();
+
   Object.assign(modalData, {
     controlDesign,
     groupNumber,
     equipmentNumber: equipment.number_equip,
-    currentDay: date.day,
-    currentDate: date.date,
-    currentMonth: date.month,
-    currentTime: date.time,
+    plannedDay: date.day,
+    plannedDate: date.date,
+    currentMonth: formattedDate, // Update with current date
+    currentTime: formattedTime,
     planificationId,
   });
   isModalVisible.value = true;
 };
-const findPlanificationId = (equipmentNumber, date) => {
-  const planification = planifications.value.flatMap((design) =>
-    design.groupes.flatMap((groupe) =>
-      groupe.equipments
-        .filter((equipment) => equipment.number_equip === equipmentNumber)
-        .flatMap((equipment) =>
-          equipment.dates
-            .filter((equipmentDate) => equipmentDate === date)
-            .map(
-              (equipmentDate) =>
-                planifications.value
-                  .find(
-                    (plan) =>
-                      plan.groupes.some(
-                        (grp) =>
-                          grp.equipments.some(
-                            (equip) =>
-                              equip.number_equip === equipmentNumber &&
-                              equip.dates.includes(equipmentDate)
-                          ) && grp.number_group === groupe.number_group
-                      ) && plan.id_category === design.id_category
-                  )
-                  ?.planifications.find(
-                    (planif) =>
-                      planif.controle_id ===
-                        planifications.value
-                          .flatMap((d) =>
-                            d.groupes.flatMap((g) =>
-                              g.equipments.filter(
-                                (e) => e.number_equip === equipmentNumber
-                              )
-                            )
-                          )
-                          .find((e) => e.number_equip === equipmentNumber).id &&
-                      planif.date_planified === equipmentDate
-                  )?.id
-            )
-        )
-    )
-  );
 
-  return planification[0]?.id || null;
-};
 const navigatePalier = (direction) => {
   const palierOrder = ["palier1", "palier2", "palier3", "palier4"];
   let currentIndex = palierOrder.indexOf(currentScreen.value);
+
   if (direction === "next") {
-    currentScreen.value = palierOrder[currentIndex + 1];
+    if (currentIndex === palierOrder.length - 1) {
+      backToReview();
+    } else {
+      currentScreen.value = palierOrder[currentIndex + 1];
+    }
   } else if (direction === "previous") {
-    currentScreen.value = palierOrder[currentIndex - 1];
+    if (currentIndex === 0) {
+      currentScreen.value = "initial";
+    } else {
+      const previousPalier = palierOrder[currentIndex - 1];
+      currentScreen.value = previousPalier;
+    }
   }
+
   fromReviewPage.value = false;
 };
-
 const editPalier = (palier, parameter) => {
   fromReviewPage.value = true;
   currentScreen.value = palier;
@@ -758,8 +739,21 @@ const submitRealizationData = async () => {
         ...formatPalierValues(modalData.palierValues.palier4, "palier4"),
       ],
     };
-    console.log("modalData.planificationId", modalData.planificationId);
+    console.log("Payload:", JSON.stringify(payload, null, 2)); // Log the payload for debugging
+
     await store.dispatch("addPalierParameter", payload);
+    const datePayload = {
+      date_realized: new Date(modalData.plannedDate)
+        .toISOString()
+        .split("T")[0],
+    };
+
+    await store.dispatch("updateDateRealized", {
+      planificationId: modalData.planificationId,
+      payload: datePayload,
+    });
+
+    console.log("Submission", datePayload);
     closeModal();
   } catch (error) {
     console.error("Submission Error:", error);
