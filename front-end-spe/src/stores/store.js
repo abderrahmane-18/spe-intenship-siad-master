@@ -6,6 +6,18 @@ const store = createStore({
   state: {
     cachedPermissions: {},
     users: [],
+    groupRealizationData: [],
+
+    chartData1: {
+      series: [],
+      labels: [
+        "Equipment Realized",
+        "Equipment in Delay",
+        "Equipment Not Realized",
+      ],
+    },
+    chartData: null, // or {} if you prefer
+
     categories: [],
     allCategories: [],
     designations: [],
@@ -41,6 +53,15 @@ const store = createStore({
     setAddedData(state, payload) {
       state.addedData = payload;
     },
+    SET_CHART_DATA1(state, data) {
+      state.chartData1 = data;
+    },
+    SET_CHART_DATA(state, data) {
+      state.chartData = data;
+    },
+    SET_GROUP_REALIZATION_DATA(state, data) {
+      state.groupRealizationData = data;
+    },
     UPDATE_DATE_REALIZED(state, { planificationId, date_realized }) {
       const planification = state.planifications.find(
         (p) => p.id === planificationId
@@ -75,6 +96,7 @@ const store = createStore({
       state.notifications.unshift(notification); // Add to the beginning of the array
       state.notifying = true;
     },
+
     CLEAR_NOTIFYING(state) {
       state.notifying = false;
     },
@@ -220,6 +242,66 @@ const store = createStore({
           console.error(error);
         });
     },
+
+    async fetchPlanificationsDelay({ commit }) {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/planificationsDelay",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        const data = response.data;
+        const chartData = {
+          series: [data.realized, data.delayed, data.not_realized],
+          labels: [
+            "Equipment Realized",
+            "Equipment in Delay",
+            "Equipment Not Realized",
+          ],
+        };
+        commit("SET_CHART_DATA1", chartData);
+      } catch (error) {
+        console.error("Error fetching planifications:", error);
+      }
+    },
+    async fetchGroupRealizationData({ commit }) {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/group-realization-data",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+        commit("SET_GROUP_REALIZATION_DATA", response.data);
+      } catch (error) {
+        console.error("Error fetching group realization data:", error);
+      }
+    },
+    async fetchChartData({ commit }) {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/palier-data",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        const data = response.data;
+        commit("SET_CHART_DATA", data);
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+        commit("SET_CHART_DATA", null); // or {} if you prefer
+        throw error;
+      }
+    },
+
     async fetchPermissionsUSER({ commit }) {
       try {
         const response = await axios.get(
@@ -662,6 +744,10 @@ const store = createStore({
     getNotifications: (state) => state.notifications,
     isNotifying: (state) => state.notifying,
   },
+  getGroupRealizationData: (state) => state.groupRealizationData,
+
+  getChartData: (state) => state.chartData,
+  getChartData1: (state) => state.chartData1,
 });
 
 export default store;

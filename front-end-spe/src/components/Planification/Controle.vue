@@ -101,7 +101,7 @@
                                       :key="category.id"
                                       :value="category.id"
                                     >
-                                      {{ category.id }}
+                                      {{ category.designation }}
                                     </option>
                                   </select>
                                 </div>
@@ -200,7 +200,9 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
+                  <tbody
+                    class="bg-white divide-y divide-gray-200 dark:bg-customDarkBlue"
+                  >
                     <tr
                       v-for="controle in controles"
                       :key="controle.id"

@@ -1,6 +1,10 @@
 import "./style.css";
+
+import "./assets/css/satoshi.css";
+import "./assets/css/style.css";
 import "jsvectormap/dist/css/jsvectormap.min.css";
 import "flatpickr/dist/flatpickr.min.css";
+
 //import './axios'
 import { createPinia } from "pinia";
 //import router from './router'

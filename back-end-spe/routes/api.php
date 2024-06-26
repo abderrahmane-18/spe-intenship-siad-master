@@ -42,16 +42,22 @@ Route::group(['middleware' => ['auth:sanctum', 'role:super-admin|admin|staff']],
     Route::delete('categories/delete/{id}',  [CategoryController::class, "destroy"]);
 
     Route::get('roles', [RoleController::class, "index"]);
-  
+    Route::get('/palier-data', [PalierParameterController::class, 'getPalierData']);
     Route::get('roles/{id}', [RoleController::class, "showRole"]);
     //Route::resource('permissions', App\Http\Controllers\PermissionController::class);
     Route::put('permission/{permissionId}', [PermissionController::class, 'update']);
     Route::post('permission', [PermissionController::class, 'store']);
     Route::get('permissions', [App\Http\Controllers\PermissionController::class, 'index']);
     Route::post('/realization', [PalierParameterController::class, 'store']);
-              
+    Route::get('/planificationsDelay', [PlanificationController::class, 'indexDelay']);
+
+
+    Route::get('/group-realization-data', [GroupeController::class, 'getGroupRealizationData']);
+
+
 Route::patch('planifications/3',[PlanificationController::class, "updateDateRealized"]);
     //Route::post('/store-collaborator', [PalierParameterController::class, 'store']);
+    Route::patch('/planification/{id}/date-realized', [PlanificationController::class, 'updateDateRealized']);
 
     Route::get('planifications', [PlanificationController::class,'get']);
     Route::delete('permissions/delete/{per_id}',  [PermissionController::class, "destroy"]);
@@ -78,6 +84,7 @@ Route::patch('planifications/3',[PlanificationController::class, "updateDateReal
    Route::get('groupes', [GroupeController::class, "index"]);
     Route::post('groupe', [GroupeController::class, "store"]);
     Route::post('planification', [PlanificationController::class, "store"]);
+    Route::delete('/palier-parameters', [PalierParameterController::class, 'destroyAll']);
 
     Route::post('controle', [ControleController::class, "store"]);
     Route::get('controle/data', [ControleController::class, "getControlData"]);
@@ -85,6 +92,8 @@ Route::patch('planifications/3',[PlanificationController::class, "updateDateReal
     Route::get('controles', [ControleController::class, 'index']);
   //  Route::get('/planifications', [PlanificationController::class, 'getPlanificationsByMonthYear']);
     Route::delete('/planifications', [PlanificationController::class, 'deleteAll']);
+    Route::delete('/controles', [ControleController::class, 'deleteAll']);
+
       Route::get('/planifications', [PlanificationController::class, 'getPlanificationsByMonthYear']);
 
     // Route::get('categories', [CategoryController::class, "index"]);

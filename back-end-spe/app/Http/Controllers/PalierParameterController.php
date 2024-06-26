@@ -46,5 +46,47 @@ class PalierParameterController extends Controller
             return response()->json(['message' => 'An error occurred'], 500);
         }
     }
+    public function getPalierData(Request $request)
+    {
+        $query = PalierParameter::query()
+            ->join('planifications', 'palier_parameters.planification_id', '=', 'planifications.id')
+            ->select('palier_parameters.*', 'planifications.date_planified', 'planifications.date_realized');
+    
+        $palierData = $query->get()
+            ->groupBy('planification_id')
+            ->map(function ($planificationGroup) {
+                $firstItem = $planificationGroup->first();
+                return [
+                    'date_planified' => $firstItem->date_planified,
+                    'date_realized' => $firstItem->date_realized,
+                    'parameters' => $planificationGroup
+                        ->groupBy('parameter_name')
+                        ->map(function ($parameterGroup) {
+                            return $parameterGroup->mapWithKeys(function ($item) {
+                                return [
+                                    $item->palier_name => [
+                                        'value_horizental' => $item->value_horizental,
+                                        'value_vertical' => $item->value_vertical,
+                                        'value_axial' => $item->value_axial,
+                                    ]
+                                ];
+                            });
+                        })
+                ];
+            });
+    
+        return response()->json($palierData);
+    }
+        public function destroyAll()
+    {
+        try {
+            PalierParameter::truncate();
+    
+            return response()->json(['message' => 'All palier parameters deleted successfully']);
+        } catch (\Exception $e) {
+            Log::error('Exception: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred while deleting the palier parameters'], 500);
+        }
+    }
    
 }

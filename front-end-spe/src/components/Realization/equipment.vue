@@ -107,20 +107,26 @@
                             :id="`cell-${index_designation}-${index_group}-${index_equipement}`"
                             class="border border-black py-1 px-2 cursor-pointer"
                             :class="{
-                              'bg-blue-400':
+                              'bg-blue-200':
                                 planificationDates.has(
-                                  equipment.number_equip
+                                  `${design.id_category}-${groupe.number_group}-${equipment.number_equip}`
                                 ) &&
                                 planificationDates
-                                  .get(equipment.number_equip)
-                                  .includes(formattedDates[n].date),
+                                  .get(
+                                    `${design.id_category}-${groupe.number_group}-${equipment.number_equip}`
+                                  )
+                                  .includes(date.date),
                             }"
                             @click="
                               showRealizationModal(
                                 equipment,
                                 formattedDates[n],
                                 design.designation,
-                                groupe.number_group
+                                groupe.number_group,
+                                design.id_category,
+                                index_designation,
+                                index_equipement,
+                                index_group
                               )
                             "
                           >
@@ -444,6 +450,9 @@
                   >
                     Submit
                   </button>
+                  <div v-if="isSpinnerVisible" class="spinner-overlay">
+                    <div class="spinner"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -455,7 +464,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, reactive, nextTick } from "vue";
+import { ref, watch, computed, reactive, nextTick, onMounted } from "vue";
 
 import axios from "axios";
 import Dashboard from "@/views/Dashboard.vue";
@@ -463,7 +472,7 @@ import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
 
 const pageTitle = "Realization ";
 const planifications = ref([]);
-const currentMonth = new Date().getMonth() + 7; // JavaScript months are 0-based
+const currentMonth = new Date().getMonth() - 4; // JavaScript months are 0-based
 const currentYear = new Date().getFullYear();
 const selectedMonth = ref(currentMonth); // Default to current month
 const selectedYear = ref(currentYear); // Default to current year
@@ -496,7 +505,7 @@ const planificationDates = computed(() => {
   planifications.value.forEach((design) => {
     design.groupes.forEach((groupe) => {
       groupe.equipments.forEach((equipment) => {
-        const controleId = equipment.number_equip;
+        const controleId = `${design.id_category}-${groupe.number_group}-${equipment.number_equip}`;
         if (!dates.has(controleId)) {
           dates.set(controleId, []);
         }
@@ -522,8 +531,12 @@ const fetchData = async () => {
         },
       }
     );
-    console.log("response.data", response.data);
+    console.log("API Response:", response.data);
     planifications.value = response.data;
+    console.log(
+      "Planifications:",
+      JSON.stringify(planifications.value, null, 2)
+    );
   } catch (error) {
     console.error("API Error:", error);
   }
@@ -538,7 +551,6 @@ const calc_equi_for_each_group = (groupe) => {
 };
 
 const weekDays = ref([]);
-
 const updateWeekDays = () => {
   if (selectedMonth.value !== null && selectedYear.value !== null) {
     const firstDayOfMonth = new Date(
@@ -549,18 +561,18 @@ const updateWeekDays = () => {
     const daysOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
     let startIndex = firstDayOfMonth;
     let weekDayList = [];
-    let weekCount = 0;
-    while (weekCount < 4) {
+    for (let week = 0; week < 4; week++) {
       let count = 0;
       while (count < 5) {
-        const day = daysOfWeek[startIndex % 7];
-        if (day !== "Fr" && day !== "Sa") {
-          weekDayList.push(day);
+        if (
+          daysOfWeek[startIndex % 7] !== "Fr" &&
+          daysOfWeek[startIndex % 7] !== "Sa"
+        ) {
+          weekDayList.push(daysOfWeek[startIndex % 7]);
           count++;
         }
         startIndex++;
       }
-      weekCount++;
     }
     weekDays.value = weekDayList;
   }
@@ -571,34 +583,43 @@ const formattedDates = computed(() => {
   const year = selectedYear.value;
   const month = selectedMonth.value - 1;
   if (month !== null && weekDays.value.length > 0) {
-    let currentDate = new Date(year, month, 1);
-    let weekIndex = 0;
-    while (weekIndex < 4) {
+    for (let week = 0; week < 4; week++) {
       for (let i = 0; i < 5; i++) {
-        const day = weekDays.value[i + weekIndex * 5];
-        while (
-          currentDate.getDay() !== ["Su", "Mo", "Tu", "We", "Th"].indexOf(day)
-        ) {
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-        dates.push({ day, date: currentDate.toLocaleDateString() });
-        currentDate.setDate(currentDate.getDate() + 1);
+        const day = weekDays.value[i];
+        const date = new Date(
+          year,
+          month,
+          getDateForWeekday(day, month, year) + week * 7
+        );
+        dates.push({ day, date: date.toLocaleDateString() });
       }
-      weekIndex++;
     }
   }
   return dates;
 });
+
+function getDateForWeekday(weekday, month, year) {
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const dayOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].indexOf(weekday);
+  const diff = dayOfWeek - firstDayOfMonth;
+  return diff >= 0 ? diff + 1 : diff + 8;
+}
+
 const isModalVisible = ref(false);
 const currentScreen = ref("initial");
 const hasScrolled = ref(false);
 const handleScroll = (event) => {
   hasScrolled.value = event.target.scrollTop > 0;
 };
+const isSpinnerVisible = ref(false);
 
 const modalData = reactive({
   controlDesign: "",
+  frequencyRpm: 0,
   groupNumber: "",
+  index_equipement: "",
+  index_group: "",
+  id_category: "",
   equipmentNumber: "",
   plannedDay: "",
   plannedDate: "",
@@ -617,6 +638,7 @@ const modalData = reactive({
       deplacementHorizontal: "",
       deplacementAxial: "",
       deplacementVertical: "",
+      index_designation: "",
     },
     palier2: {
       speedHorizontal: "",
@@ -665,7 +687,18 @@ const closeModal = () => {
 };
 const fromReviewPage = ref(false);
 
-const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
+const showRealizationModal = (
+  equipment,
+  date,
+  controlDesign,
+  groupNumber,
+  id_category, // Store the id_category instead of frequency_rpm
+  index_designation,
+  index_equipement,
+  index_group
+) => {
+  console.log("aa", store.state.allCategories);
+
   const selectedDate = equipment.dates.find(
     (d) => new Date(d.date).toLocaleDateString() === date.date
   );
@@ -677,6 +710,10 @@ const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
 
   Object.assign(modalData, {
     controlDesign,
+    id_category, // Store the id_category instead of frequency_rpm
+    index_designation,
+    index_equipement,
+    index_group,
     groupNumber,
     equipmentNumber: equipment.number_equip,
     plannedDay: date.day,
@@ -686,6 +723,21 @@ const showRealizationModal = (equipment, date, controlDesign, groupNumber) => {
     planificationId,
   });
   isModalVisible.value = true;
+  console.log("sa frequencyRpm ", frequency_rpm.value); // Store the id_category instead of frequency_rpm
+  const norms = getNorms(frequency_rpm.value);
+  /*
+  console.log("palier1 ", modalData.palierValues.palier1, norms);
+  const results = {
+    palier1: compareWithNorms(modalData.palierValues.palier1, norms),
+    palier2: compareWithNorms(modalData.palierValues.palier2, norms),
+    palier3: compareWithNorms(modalData.palierValues.palier3, norms),
+    palier4: compareWithNorms(modalData.palierValues.palier4, norms),
+  };
+
+  // Calculate overall result
+  const overallResult = calculateOverallResult(results);
+  updateCellColor(overallResult);
+  */
 };
 
 const navigatePalier = (direction) => {
@@ -720,7 +772,21 @@ const editPalier = (palier, parameter) => {
     }
   });
 };
-
+const getFrequencyRPM = (id_category) => {
+  const allCategories = store.state.allCategories;
+  const category = allCategories.find((cat) => cat.id === id_category);
+  console.log("category", category.frequence_rpm);
+  console.log("category", category.codification);
+  return category.frequence_rpm;
+};
+const frequency_rpm = computed(() => {
+  return getFrequencyRPM(modalData.id_category);
+});
+const showSpinner = () => {
+  isSpinnerVisible.value = true;
+  console.log("isSpinnerVisible", isSpinnerVisible.value);
+  // 4 seconds spinner
+};
 const backToReview = () => {
   currentScreen.value = "review";
   fromReviewPage.value = false;
@@ -728,6 +794,8 @@ const backToReview = () => {
 const store = useStore();
 
 const submitRealizationData = async () => {
+  showSpinner(); // Show spinner immediately when submit is clicked
+
   try {
     const payload = {
       planification_id: modalData.planificationId,
@@ -739,13 +807,12 @@ const submitRealizationData = async () => {
         ...formatPalierValues(modalData.palierValues.palier4, "palier4"),
       ],
     };
+
     console.log("Payload:", JSON.stringify(payload, null, 2)); // Log the payload for debugging
 
     await store.dispatch("addPalierParameter", payload);
     const datePayload = {
-      date_realized: new Date(modalData.plannedDate)
-        .toISOString()
-        .split("T")[0],
+      date_realized: modalData.plannedDate,
     };
 
     await store.dispatch("updateDateRealized", {
@@ -754,12 +821,58 @@ const submitRealizationData = async () => {
     });
 
     console.log("Submission", datePayload);
-    closeModal();
+
+    const norms = getNorms(frequency_rpm.value);
+    console.log("norms", norms);
+    console.log(
+      "palier1 ",
+      JSON.stringify(modalData.palierValues.palier1, norms)
+    );
+    console.log(
+      "palier2 ",
+      JSON.stringify(modalData.palierValues.palier2, norms)
+    );
+    console.log(
+      "palier3 ",
+      JSON.stringify(modalData.palierValues.palier3, norms)
+    );
+    console.log("palier4 ", modalData.palierValues.palier4, norms);
+
+    console.log(
+      JSON.stringify(compareWithNorms(modalData.palierValues.palier1, norms))
+    );
+    console.log(
+      JSON.stringify(compareWithNorms(modalData.palierValues.palier2, norms))
+    );
+    const results = {
+      palier1: compareWithNorms(modalData.palierValues.palier1, norms),
+      palier2: compareWithNorms(modalData.palierValues.palier2, norms),
+      palier3: compareWithNorms(modalData.palierValues.palier3, norms),
+      palier4: compareWithNorms(modalData.palierValues.palier4, norms),
+    };
+    console.log("results", results);
+    // Calculate overall result
+    const overallResult = calculateOverallResult(results);
+    console.log(
+      "results overall",
+      JSON.stringify(calculateOverallResult(results))
+    );
+    console.log("overallResult", overallResult);
+    console.log("frequency_rpm.value", frequency_rpm.value);
+    // Update cell color based on overall result
+    updateCellColor(overallResult);
+
+    setTimeout(() => {
+      hideSpinner();
+      closeModal();
+    }, 1000);
   } catch (error) {
     console.error("Submission Error:", error);
   }
 };
-
+const hideSpinner = () => {
+  isSpinnerVisible.value = false;
+};
 const formatPalierValues = (palierValues, palierName) => {
   return [
     {
@@ -785,9 +898,159 @@ const formatPalierValues = (palierValues, palierName) => {
     },
   ];
 };
+const calculateOverallResult = (results) => {
+  const resultValues = Object.values(results);
+  if (resultValues.every((r) => r === "veryGood")) return "veryGood";
+  if (resultValues.every((r) => r === "veryGood" || r === "good"))
+    return "good";
+  if (resultValues.includes("unacceptable")) return "unacceptable";
+  if (resultValues.includes("eligible")) return "eligible";
+  return "average";
+};
+const updateCellColor = (result) => {
+  console.log("result", result);
+
+  const cellId = `cell-${modalData.index_designation}-${modalData.index_group}-${modalData.index_equipement}`;
+  console.log("cellId", cellId);
+  const cell = document.getElementById(cellId);
+
+  console.log("codification", cell);
+  if (cell) {
+    cell.classList.remove("bg-blue-400");
+    switch (result) {
+      case "veryGood":
+        cell.classList.add("bg-green-500");
+        break;
+      case "good":
+        cell.classList.add("bg-green-300");
+        break;
+      case "average":
+        cell.classList.add("bg-yellow-300");
+        break;
+      case "eligible":
+        cell.classList.add("bg-orange-300");
+        break;
+      case "unacceptable":
+        cell.classList.add("bg-orange-500");
+        break;
+    }
+  }
+};
+const compareWithNorms = (values, norms) => {
+  const maxValues = {
+    speed: Math.max(
+      values.speedHorizontal,
+      values.speedAxial,
+      values.speedVertical
+    ),
+    acceleration: Math.max(
+      values.AccelerationHorizontal,
+      values.AccelerationAxial,
+      values.AccelerationVertical
+    ),
+    deplacement: Math.max(
+      values.deplacementHorizontal,
+      values.deplacementAxial,
+      values.deplacementVertical
+    ),
+  };
+  console.log("norms.veryGood.speed", norms.veryGood.speed);
+  console.log(" norms.veryGood.acceleration", norms.veryGood.acceleration);
+  console.log("  norms.veryGood.deplacement", norms.veryGood.deplacement);
+
+  if (
+    maxValues.speed <= norms.veryGood.speed &&
+    maxValues.acceleration <= norms.veryGood.acceleration &&
+    maxValues.deplacement <= norms.veryGood.deplacement
+  ) {
+    return "veryGood";
+  } else if (
+    maxValues.speed <= norms.good.speed &&
+    maxValues.acceleration <= norms.good.acceleration &&
+    maxValues.deplacement <= norms.good.deplacement
+  ) {
+    return "good";
+  } else if (
+    maxValues.speed <= norms.average.speed &&
+    maxValues.acceleration <= norms.average.acceleration &&
+    maxValues.deplacement <= norms.average.deplacement
+  ) {
+    return "average";
+  } else if (
+    maxValues.speed <= norms.eligible.speed &&
+    maxValues.acceleration <= norms.eligible.acceleration &&
+    maxValues.deplacement <= norms.eligible.deplacement
+  ) {
+    return "eligible";
+  } else {
+    return "unacceptable";
+  }
+};
+const getNorms = (freq) => {
+  if (freq <= 100) {
+    return {
+      veryGood: { deplacement: 101.4, speed: 0.2, acceleration: 0.004 },
+      good: { deplacement: 203, speed: 0.7, acceleration: 0.008 },
+      average: { deplacement: 685, speed: 2.5, acceleration: 0.025 },
+      eligible: { deplacement: 1727, speed: 6.3, acceleration: 0.06 },
+      unacceptable: { deplacement: 3048, speed: 11.4, acceleration: 0.11 },
+    };
+  } else if (freq > 100 && freq <= 500) {
+    return {
+      veryGood: { deplacement: 35.5, speed: 0.5, acceleration: 0.033 },
+      good: { deplacement: 55.8, speed: 1, acceleration: 0.053 },
+      average: { deplacement: 180, speed: 3.3, acceleration: 0.7 },
+      eligible: { deplacement: 431, speed: 8.42, acceleration: 0.43 },
+      unacceptable: { deplacement: 838, speed: 15.2, acceleration: 1.09 },
+    };
+  } else if (freq > 500 && freq <= 1200) {
+    return {
+      veryGood: { deplacement: 14.4, speed: 0.5, acceleration: 0.078 },
+      good: { deplacement: 30.4, speed: 1.27, acceleration: 0.16 },
+      average: { deplacement: 86.3, speed: 3.8, acceleration: 0.48 },
+      eligible: { deplacement: 203, speed: 8.8, acceleration: 1.1 },
+      unacceptable: { deplacement: 381, speed: 16.5, acceleration: 2.08 },
+    };
+  } else if (freq > 1200 && freq <= 1800) {
+    return {
+      veryGood: { deplacement: 9.6, speed: 0.5, acceleration: 0.119 },
+      good: { deplacement: 19.3, speed: 1.27, acceleration: 0.23 },
+      average: { deplacement: 55.8, speed: 3.8, acceleration: 0.73 },
+      eligible: { deplacement: 134, speed: 8.8, acceleration: 1.72 },
+      unacceptable: { deplacement: 381, speed: 16.5, acceleration: 2.08 },
+    };
+  } else if (freq > 1800 && freq <= 3600) {
+    return {
+      veryGood: { deplacement: 4.8, speed: 0.5, acceleration: 0.32 },
+      good: { deplacement: 9.6, speed: 1.27, acceleration: 0.66 },
+      average: { deplacement: 27.9, speed: 3.8, acceleration: 1.4 },
+      eligible: { deplacement: 66, speed: 8.8, acceleration: 3.3 },
+      unacceptable: { deplacement: 124, speed: 16.5, acceleration: 6.09 },
+    };
+  } else if (freq > 3600 && freq <= 5000) {
+    return {
+      veryGood: { deplacement: 3.5, speed: 0.5, acceleration: 0.33 },
+      good: { deplacement: 6.8, speed: 1.27, acceleration: 0.66 },
+      average: { deplacement: 20.3, speed: 3.8, acceleration: 1.98 },
+      eligible: { deplacement: 48, speed: 8.8, acceleration: 4.57 },
+      unacceptable: { deplacement: 88, speed: 16.2, acceleration: 8.3 },
+    };
+  } else if (freq > 5000 && freq <= 10000) {
+    return {
+      veryGood: { deplacement: 1.2, speed: 0.5, acceleration: 0.53 },
+      good: { deplacement: 2.7, speed: 1, acceleration: 1.06 },
+      average: { deplacement: 9.3, speed: 3.5, acceleration: 3.8 },
+      eligible: { deplacement: 21.8, speed: 8.8, acceleration: 3.8 },
+      unacceptable: { deplacement: 40.6, speed: 14.9, acceleration: 15.74 },
+    };
+  }
+};
 watch([selectedMonth, selectedYear], updateWeekDays);
 updateWeekDays();
 fetchData();
+onMounted(() => {
+  store.dispatch("fetchAllCategories");
+});
 </script>
 
 <style scoped>
@@ -823,7 +1086,36 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #f1f1f1;
 }
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
 
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 /*
 .modal {
   position: fixed;

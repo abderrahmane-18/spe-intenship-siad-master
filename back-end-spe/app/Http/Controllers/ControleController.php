@@ -8,6 +8,7 @@ use App\Models\Groupe;
 use App\Models\Planification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ControleController extends Controller
 {
@@ -19,7 +20,6 @@ class ControleController extends Controller
             'number_group' => 'required|exists:groupes,id',
             'number_equip' => 'required|string|unique:controles,number_equip,NULL,NULL,id_categorie,' . $request->input('id_categorie') . ',number_group,' . $request->input('number_group'),
         ]);
-
         // Create a new Controle instance
         $controle = Controle::create($validatedData);
 
@@ -34,6 +34,16 @@ class ControleController extends Controller
         $controles = Controle::with('category', 'groupe')->get();
 
         return response()->json($controles);
+    }
+    public function deleteAll(){
+        try {
+           Controle::truncate();
+    
+            return response()->json(['message' => 'All palier parameters deleted successfully']);
+        } catch (\Exception $e) {
+        Log::error('Exception: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred while deleting the palier parameters'], 500);
+        }
     }
     public function getControlData()
     {

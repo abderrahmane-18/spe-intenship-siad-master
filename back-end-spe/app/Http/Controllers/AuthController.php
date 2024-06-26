@@ -87,7 +87,7 @@ class AuthController extends Controller
     {
         $user = User::findOrFail($id);
         $result = array('status' => true, 'message' => 'user hase been fetch succefully', 'data' => $user);
-
+        echo ('sssssssdss');
         return response()->json($result, 200);
     }
     public function update(Request $request, $id)
