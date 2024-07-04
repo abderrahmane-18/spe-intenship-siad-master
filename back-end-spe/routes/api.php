@@ -23,10 +23,10 @@ Route::get('/user', function (Request $request) {
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::post('login', [AuthController::class, 'login']);
-//Route::put('update-profile', [AuthController::class, 'updateProfile']);
-//Route::patch('{id}/update', [AuthController::class, 'update']);
-//Route::get('user', [AuthController::class, 'index']);
-//Route::get('user/{id}', [AuthController::class, 'showUser']);
+Route::put('update-profile', [AuthController::class, 'updateProfile']);
+Route::patch('{id}/update', [AuthController::class, 'update']);
+Route::get('user', [AuthController::class, 'index']);
+Route::get('user/{id}', [AuthController::class, 'showUser']);
 
 ;
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
@@ -68,7 +68,7 @@ Route::patch('planifications/3',[PlanificationController::class, "updateDateReal
     Route::get('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'addPermissionToRole']);
     Route::put('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'givePermissionToRole']);
 
-  //  Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::resource('users', App\Http\Controllers\UserController::class);
     //Route::put('/user/{id}', [UserController::class,'update']);
    // Route::put('/user/{user}', [UserController::class, 'update']);
 

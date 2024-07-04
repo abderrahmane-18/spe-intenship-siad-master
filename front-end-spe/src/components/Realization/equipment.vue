@@ -472,7 +472,7 @@ import BreadcrumbDefault from "@/components/Breadcrumbs/BreadcrumbDefault.vue";
 
 const pageTitle = "Realization ";
 const planifications = ref([]);
-const currentMonth = new Date().getMonth() - 4; // JavaScript months are 0-based
+const currentMonth = new Date().getMonth() + 3; // JavaScript months are 0-based
 const currentYear = new Date().getFullYear();
 const selectedMonth = ref(currentMonth); // Default to current month
 const selectedYear = ref(currentYear); // Default to current year
