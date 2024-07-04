@@ -19,7 +19,7 @@ const groupes = computed(() => store.state.groupes);
 
 <template>
   <Dashboard>
-    <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-7xl dark:bg-customDarkBlue">
       <BreadcrumbDefault :pageTitle="pageTitle" />
       <div class="flex flex-col">
         <div class="overflow-x-auto">
@@ -27,8 +27,10 @@ const groupes = computed(() => store.state.groupes);
             <div
               class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
             >
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+              <table
+                class="min-w-full divide-y divide-gray-200 dark:bg-customDarkBlue dark:text-white"
+              >
+                <thead class="bg-gray-50 dark:bg-customDarkBlue">
                   <tr>
                     <th
                       scope="col"
@@ -50,7 +52,9 @@ const groupes = computed(() => store.state.groupes);
                     </th>
                   </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody
+                  class="bg-white divide-y divide-gray-200 dark:bg-customDarkBlue"
+                >
                   <tr
                     v-for="groupe in groupes"
                     :key="groupe.id"

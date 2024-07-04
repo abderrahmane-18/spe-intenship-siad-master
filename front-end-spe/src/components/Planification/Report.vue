@@ -8,7 +8,11 @@
           <!-- Date Filter Section -->
           <div class="mb-4 flex items-center">
             <label for="month" class="mr-2 font-bold">Select Month:</label>
-            <select v-model="selectedMonth" id="month" class="border p-2 mr-4">
+            <select
+              v-model="selectedMonth"
+              id="month"
+              class="border p-2 mr-4 dark:bg-customDarkBlue"
+            >
               <option
                 v-for="month in months"
                 :key="month.value"
@@ -22,7 +26,7 @@
               type="number"
               v-model="selectedYear"
               id="year"
-              class="border p-2 mr-4"
+              class="border p-2 mr-4 dark:bg-customDarkBlue"
               min="2000"
               :max="new Date().getFullYear()"
             />

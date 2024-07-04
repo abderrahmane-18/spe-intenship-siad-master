@@ -7,6 +7,8 @@ use App\Models\Groupe;
 use App\Models\Planification;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PlanificationController extends Controller
 {
@@ -31,6 +33,27 @@ class PlanificationController extends Controller
             
         return response()->json($planifications);
     }
+    public function indexDelay()
+    {
+        $planifications = Planification::select(
+            'date_planified',
+            'date_realized',
+            DB::raw('CASE 
+                WHEN date_realized IS NULL AND date_planified < CURRENT_DATE THEN \'not_realized\'
+                WHEN date_planified = date_realized THEN \'realized\'
+                ELSE \'delayed\'
+            END as status')
+        )->get();
+    
+        $chartData = [
+            'realized' => $planifications->where('status', 'realized')->count(),
+            'delayed' => $planifications->where('status', 'delayed')->count(),
+            'not_realized' => $planifications->where('status', 'not_realized')->count(),
+        ];
+    
+        return response()->json($chartData);
+    }
+    
     public function store(Request $request)
     {
         // Validate the request data
@@ -243,6 +266,16 @@ public function getPlanificationsByMonthYear(Request $request)
         });
 
         return response()->json($data);
+    }
+    public function deleteAll(){
+        try {
+           Planification::truncate();
+    
+            return response()->json(['message' => 'All palier parameters deleted successfully']);
+        } catch (\Exception $e) {
+            Log::error('Exception: ' . $e->getMessage());
+            return response()->json(['message' => 'An error occurred while deleting the palier parameters'], 500);
+        }
     }
     public function updateDateRealized(Request $request, $id)
     {

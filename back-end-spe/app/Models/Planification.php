@@ -14,6 +14,7 @@ class Planification extends Model
     ];
     protected $casts = [
         'date_planified' => 'date',
+        'date_realized' => 'date',
     ];
     public function controle()
     {

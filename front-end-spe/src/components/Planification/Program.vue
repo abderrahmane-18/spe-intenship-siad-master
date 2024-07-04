@@ -449,47 +449,38 @@ const formattedDates = computed(() => {
   const dates = [];
   const year = selectedYear.value;
   const month = selectedMonth.value;
-  console.log();
-  if (month !== null && weekDays.value.length > 0) {
-    console.log("weekDays ", weekDays.value.length);
-    let j = 0;
-    for (let index = 0; index < 28; index++) {
-      for (let i = 0; i < 5; i++) {
-        const day = weekDays.value[i];
-        let date = "";
-        if (index == 0) {
-          date = new Date(
-            year,
-            month,
-            getDateForWeekday(day, month, year) + index
-          );
-        } else {
-          date = new Date(
-            year,
-            month,
-            getDateForWeekday(day, month, year) + index - 1
-          );
-        }
-        //  console.log("current date ", date.getDate());
-        console.log("date i  ", weekDays.value.length);
 
-        dates.push({ day, date: date.toLocaleDateString() });
-        j += 7;
+  if (month !== null) {
+    const firstDayOfMonth = new Date(year, month, 1);
+    let currentDate = new Date(firstDayOfMonth);
+
+    // Find the first working day (Sunday to Thursday)
+    while (currentDate.getDay() === 5 || currentDate.getDay() === 6) {
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    for (let week = 0; week < 4; week++) {
+      for (let day = 0; day < 5; day++) {
+        if (currentDate.getMonth() === month) {
+          const dayName = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][
+            currentDate.getDay()
+          ];
+          dates.push({
+            day: dayName,
+            date: currentDate.toLocaleDateString(),
+          });
+        }
+
+        // Move to next working day
+        do {
+          currentDate.setDate(currentDate.getDate() + 1);
+        } while (currentDate.getDay() === 5 || currentDate.getDay() === 6);
       }
-      index += 7;
     }
   }
-  let k = 0;
-  // for (let index = 0; index < dates.length; index++) {
-  //   console.log(dates[index]);
-  //   dates[i].date = dates[i].date + k;
-  //   k += 7;
-  // }
 
-  console.log("datae ", dates);
   return dates;
 });
-
 function getDateForWeekday(weekday, month, year) {
   const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
   const firstDayOfMonth = new Date(year, month, 1).getDay();
@@ -510,6 +501,7 @@ const selectDate = (
   cellDate
 ) => {
   const cell = event.target;
+
   // const cellId = `cell-${designIndex}-${groupIndex}-${equipmentIndex}`;
   //console.log("cellId ,", cellId);
   //if (cell.id === cellId) {
