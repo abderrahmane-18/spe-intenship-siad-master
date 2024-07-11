@@ -205,4 +205,19 @@ router.beforeEach(async (to, from, next) => {
     next();
   }
 });
+function routeBasedOnRole(role, next) {
+  switch (role) {
+    case "super-admin":
+      next({ name: "permission" });
+      break;
+    case "admin":
+      next({ name: "Dashboard" });
+      break;
+    case "staff":
+      next({ name: "equipment" });
+      break;
+    default:
+      next({ name: "Login" });
+  }
+}
 export default router;

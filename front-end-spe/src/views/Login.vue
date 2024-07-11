@@ -107,7 +107,7 @@ async function login() {
     } else {
       localStorage.removeItem("rememberedEmail");
     }
-    router.push({ name: "Dashboard" });
+    router.push({ name: "Admin" });
   } catch (error) {
     console.error("Error logging in:", error);
   } finally {
