@@ -46,7 +46,7 @@ class UserRolePermissionSeeder extends Seeder
 
         // Let's give few permissions to admin role.
         $adminRole = Role::where('name', 'admin')->first();
-        $adminPermissions = ['create role', 'view roles', 'update role', 'create permission', 'view permission', 'create user', 'view user', 'update user', 'create product', 'view product', 'update product'];
+        $adminPermissions = ['create role', 'view roles', 'update role', 'create permission', 'view permission', 'create user', 'view user', 'update user'];
         $adminRole->syncPermissions($adminPermissions);
 
         // Let's Create User and assign Role to it.
