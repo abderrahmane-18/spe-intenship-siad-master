@@ -16,7 +16,6 @@
     <ul>
         <li><a href="#features">Features</a></li>
         <li><a href="#technologies">Technologies</a></li>
-        <li><a href="#project-structure">Project Structure</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#license">License</a></li>
