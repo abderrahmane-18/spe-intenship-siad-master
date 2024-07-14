@@ -24,13 +24,10 @@
     </ul>
     <h2 id="features">Features</h2>
     <ul>
-        <li>Real-time monitoring of production equipment</li>
-        <li>Automated control systems</li>
-        <li>Centralized data dashboard</li>
-        <li>Automated reporting and notifications</li>
+        <li> monitoring of production equipment (planification and realizationg o equipments)</li>
+        <li> Role-based access control</li>
         <li>Enhanced productivity and quality control</li>
-        <li><strong>Dynamic dashboards:</strong> Created dynamic dashboards and role-based access control to ensure secure and user-specific data interaction</li>
-        <li><strong>Data visualization tools:</strong> Improved decision-making and resource allocation through comprehensive and interactive data visualization tools</li>
+        <li><strong>Dynamic dashboards:</strong> Created dynamic dashboards and improved decision-making and resource allocation through comprehensive and interactive data visualization tools </li>
     </ul>
     <h2 id="technologies">Technologies</h2>
     <ul>
@@ -47,6 +44,12 @@
         <li>Composer</li>
         <li>PostgreSQL</li>
     </ul>
+ <h3>Clone Repository</h3>
+    <ol>
+        <li>Clone the repository to your local machine:
+            <pre><code>git clone [repository_url]</code></pre>
+        </li>
+    </ol>
     <h3>Frontend</h3>
     <ol>
         <li>Navigate to the <code>front-end-spe</code> directory:
