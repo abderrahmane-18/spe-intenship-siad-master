@@ -43,7 +43,7 @@
     <h3>Prerequisites</h3>
     <ul>
         <li>Node.js and npm</li>
-        <li>PHP</li>
+        <li>PHP (>= 8.2)</li>
         <li>Composer</li>
         <li>PostgreSQL</li>
     </ul>
