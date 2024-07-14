@@ -85,7 +85,7 @@
     <h2 id="usage">Usage</h2>
     <ol>
         <li>Start the frontend and backend servers as described in the <a href="#installation">Installation</a> section.</li>
-        <li>Access the application in your browser at <code>http://localhost:3000</code> for the frontend and <code>http://localhost:8000</code> for the backend.</li>
+        <li>Access the application in your browser at <code>http://localhost:5173</code>(defaul) for the frontend and <code>http://localhost:8000</code>(defaul) for the backend.</li>
     </ol>
     <h2 id="license">License</h2>
     <p>This project is licensed under the MIT License. See the <code>LICENSE</code> file for details.</p>
