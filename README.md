@@ -21,7 +21,7 @@
         <li><a href="#usage">Usage</a></li>
         <li><a href="#contributing">Contributing</a></li>
         <li><a href="#license">License</a></li>
-        <li><a href="#acknowledgements">Acknowledgements</a></li>
+      
     </ul>
     <h2 id="features">Features</h2>
     <ul>
