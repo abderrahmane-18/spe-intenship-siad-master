@@ -4,47 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>README - Real-time Monitoring and Control System</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1, h2, h3 {
-            color: #333;
-        }
-        pre {
-            background: #f4f4f4;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-        code {
-            background: #f4f4f4;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        ul li::before {
-            content: '•';
-            color: #007BFF;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-        }
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+ 
+       
 </head>
 <body>
     <h1>Real-time Monitoring and Control System for Jijel Thermal Power Station</h1>
