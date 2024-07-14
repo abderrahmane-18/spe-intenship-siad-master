@@ -44,7 +44,7 @@
     </ul>
  <h3>Clone Repository</h3>
     <ol>
-        <li>Clone the repository to your local machine from the <code>main</code> branch:
+        <li>Clone the repository to your local machine from the <code>main</code> branch: <br>
             <pre><code>git clone https://github.com/abderrahmane-18/spe-intenship-siad-master.git</code></pre>
         </li>
     </ol>
