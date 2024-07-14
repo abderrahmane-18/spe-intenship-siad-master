@@ -188,10 +188,9 @@ router.beforeEach((to, from, next) => {
 router.beforeEach(async (to, from, next) => {
   const isAuthenticated = localStorage.getItem("access_token");
   //permissions
-  const userPermissions = JSON.parse(
-    localStorage.getItem("permissions") || "[]"
-  );
-  // const userPermissions = store.getters.getUserPermissions;
+  //const userPermissions = JSON.parse(
+
+  const userPermissions = store.getters.getUserPermissions;
   console.log("access token  ", isAuthenticated);
   console.log("userPermissions sfd  ", userPermissions);
   if (to.meta.requiresAuth && !isAuthenticated) {
