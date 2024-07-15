@@ -9,17 +9,11 @@
 <body>
     <h1>Developed a web application for Real-time Monitoring and Control System for Jijel Thermal Power Station</h1>
     <h2>Overview</h2>
-
-
-![dashboard](https://github.com/user-attachments/assets/36f0396a-1a36-4f67-b5bd-bd722ba31768)
-![add-edit-role-permission_staff](https://github.com/user-attachments/assets/999d8946-d981-4e3c-9e78-34c0ea707f55)
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
  <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="imag![dashboard](https://github.com/user-attachments/assets/74369b68-b0dd-4c3f-9890-aca6e4059700)
-e1.jpg" alt="Image 1"></div>
-            <div class="swiper-slide"><img src="image2.jpg" alt="Image 2"></div>
-            <div class="swiper-slide"><img src="image3.jpg" alt="Image 3"></div>
+            <div class="swiper-slide">![dashboard](https://github.com/user-attachments/assets/36f0396a-1a36-4f67-b5bd-bd722ba31768)</div>
+            <div class="swiper-slide">![add-edit-role-permission_staff](https://github.com/user-attachments/assets/999d8946-d981-4e3c-9e78-34c0ea707f55)</div>
             <!-- Add more slides as needed -->
         </div>
         <!-- Add Pagination -->
