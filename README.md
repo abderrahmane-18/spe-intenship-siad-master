@@ -16,9 +16,9 @@
 ![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="image1.jpg" alt="Image 1"></div>
-            <div class="swiper-slide"><img src="image2.jpg" alt="Image 2"></div>
-            <div class="swiper-slide"><img src="image3.jpg" alt="Image 3"></div>
+            <div class="swiper-slide">![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/ee4b0c654c33e4f5076e9c08253aa55de4ef9099/dashboard.png)</div>
+            <div class="swiper-slide">![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)</div>
+            <div class="swiper-slide">![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)</div>
             <!-- Add more slides as needed -->
         </div>
         <!-- Add Pagination -->
