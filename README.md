@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
 </head>
 <body>
     <h1>Developed a web application for Real-time Monitoring and Control System for Jijel Thermal Power Station</h1>
     <h2>Overview</h2>
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
+ <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="image1.jpg" alt="Image 1"></div>
+            <div class="swiper-slide"><img src="image2.jpg" alt="Image 2"></div>
+            <div class="swiper-slide"><img src="image3.jpg" alt="Image 3"></div>
+            <!-- Add more slides as needed -->
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Navigation -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
     <h2>Table of Contents</h2>
     <ul>
         <li><a href="#features">Features</a></li>
@@ -81,7 +96,21 @@
         <li>Start the frontend and backend servers as described in the <a href="#installation">Installation</a> section.</li>
         <li>Access the application in your browser at <code>http://localhost:5173</code> (default) for the frontend and <code>http://localhost:8000</code> (default) for the backend.</li>
     </ol>
-   
+ <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+   <script>
+    var swiper = new Swiper('.swiper-container', {
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+</body>
+</html>
    
 </body>
 </html>
