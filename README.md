@@ -12,7 +12,7 @@
 
 
 ![dashboard](https://github.com/user-attachments/assets/36f0396a-1a36-4f67-b5bd-bd722ba31768)
-
+![add-edit-role-permission_staff](https://github.com/user-attachments/assets/999d8946-d981-4e3c-9e78-34c0ea707f55)
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
  <div class="swiper-container">
         <div class="swiper-wrapper">
