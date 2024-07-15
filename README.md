@@ -12,7 +12,8 @@
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
  <div class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="image1.jpg" alt="Image 1"></div>
+            <div class="swiper-slide"><img src="imag![dashboard](https://github.com/user-attachments/assets/74369b68-b0dd-4c3f-9890-aca6e4059700)
+e1.jpg" alt="Image 1"></div>
             <div class="swiper-slide"><img src="image2.jpg" alt="Image 2"></div>
             <div class="swiper-slide"><img src="image3.jpg" alt="Image 3"></div>
             <!-- Add more slides as needed -->
