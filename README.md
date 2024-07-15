@@ -14,6 +14,7 @@
 ![class_diagram1](https://github.com/user-attachments/assets/b8bad687-fa7b-422c-9934-38ecbf76938b)
 ![dashboard](https://github.com/user-attachments/assets/b6485916-dc29-4047-9bc5-34f4eb9d92ac)
 ![planification4](https://github.com/user-attachments/assets/fb225a62-8176-4775-a9d7-f2124a0dce32)
+![add-edit-role-permission_staff](https://github.com/user-attachments/assets/97e59a29-7487-4a94-81b3-8e58fb3146bb)
       <h2>Table of Contents</h2>
     <ul>
         <li><a href="#features">Features</a></li>
