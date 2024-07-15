@@ -10,6 +10,7 @@
     <h1>Developed a web application for Real-time Monitoring and Control System for Jijel Thermal Power Station</h1>
     <h2>Overview</h2>
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
+
 ![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/ee4b0c654c33e4f5076e9c08253aa55de4ef9099/dashboard.png)
     <h2>Table of Contents</h2>
     <ul>
