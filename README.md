@@ -14,20 +14,8 @@
 ![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/ee4b0c654c33e4f5076e9c08253aa55de4ef9099/dashboard.png)
 
 ![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/ee4b0c654c33e4f5076e9c08253aa55de4ef9099/dashboard.png)</div>
-            <div class="swiper-slide">![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)</div>
-            <div class="swiper-slide">![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)</div>
-            <!-- Add more slides as needed -->
-        </div>
-        <!-- Add Pagination -->
-        <div class="swiper-pagination"></div>
-        <!-- Add Navigation -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-    </div>
-    <h2>Table of Contents</h2>
+![planification4](https://github.com/user-attachments/assets/fb225a62-8176-4775-a9d7-f2124a0dce32)
+      <h2>Table of Contents</h2>
     <ul>
         <li><a href="#features">Features</a></li>
         <li><a href="#technologies">Technologies</a></li>
