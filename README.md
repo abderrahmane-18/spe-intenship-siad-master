@@ -10,6 +10,17 @@
     <h1>Developed a web application for Real-time Monitoring and Control System for Jijel Thermal Power Station</h1>
     <h2>Overview</h2>
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
+ <div class="container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="image1.jpg" alt="Slide 1"></div>
+                <div class="swiper-slide"><img src="image2.jpg" alt="Slide 2"></div>
+                <div class="swiper-slide"><img src="image3.jpg" alt="Slide 3"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
     <h2>Table of Contents</h2>
     <ul>
         <li><a href="#features">Features</a></li>
