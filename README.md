@@ -91,19 +91,7 @@
         <li>Start the frontend and backend servers as described in the <a href="#installation">Installation</a> section.</li>
         <li>Access the application in your browser at <code>http://localhost:5173</code> (default) for the frontend and <code>http://localhost:8000</code> (default) for the backend.</li>
     </ol>
- <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-   <script>
-    var swiper = new Swiper('.swiper-container', {
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
-</script>
+
 </body>
 </html>
    
