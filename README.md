@@ -11,9 +11,8 @@
     <h2>Overview</h2>
     <p>This project is a web application developed to automate and centralize the monitoring and control of production equipment at the Jijel Thermal Power Station. The system features dynamic dashboards and role-based access control to ensure secure, user-specific data interaction. Additionally, it enhances decision-making and resource allocation through comprehensive and interactive data visualization tools.</p>
 
-![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/ee4b0c654c33e4f5076e9c08253aa55de4ef9099/dashboard.png)
-
-![image-alt](https://github.com/abderrahmane-18/spe-intenship-siad-master/blob/677c60eb932361547a6c10765a9003c22f7b4677/add-edit-role-permission_staff.png)
+![class_diagram1](https://github.com/user-attachments/assets/b8bad687-fa7b-422c-9934-38ecbf76938b)
+![dashboard](https://github.com/user-attachments/assets/b6485916-dc29-4047-9bc5-34f4eb9d92ac)
 ![planification4](https://github.com/user-attachments/assets/fb225a62-8176-4775-a9d7-f2124a0dce32)
       <h2>Table of Contents</h2>
     <ul>
