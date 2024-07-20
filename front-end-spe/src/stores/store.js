@@ -164,9 +164,6 @@ const store = createStore({
         state.users.splice(index, 1, updatedUser);
       }
     },
-    SET_USER_ROLE(state, role) {
-      state.userRole = role;
-    },
     SET_CACHED_ROLES(state, roles) {
       state.cachedRoles = roles;
     },
@@ -751,11 +748,6 @@ const store = createStore({
 
   getChartData: (state) => state.chartData,
   getChartData1: (state) => state.chartData1,
-  userRole: (state) => {
-    const role = state.user ? state.user.roles[0] : null;
-    console.log("User role from getter:", role);
-    return role;
-  },
 });
 
 export default store;
